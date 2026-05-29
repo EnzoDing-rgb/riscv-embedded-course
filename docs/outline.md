@@ -2,11 +2,12 @@
 
 ```text
 ┌─────────────────── 8 周 × 15h ───────────────────────────────────────┐
-│  W1 ──────── W4 固件段          │  W5 ──────── W8 推理段              │
-│  驱动 · UART shell · 传感采集    │  PC 训小模型 → int8 → 板子自己算     │
-│  （不上云；计组/汇编是手段）      │  （不学 DL 理论；学能装多快多准）     │
+│  W1–W4 【裸机】开发板            │  W5–W6 【Linux PC】  W7–W8 【裸机】   │
+│  C 驱动 · shell · 传感采集       │  PyTorch 训练/量化   int8 推理上板    │
+│  OpenOCD 烧录 · 无 OS            │  导出 weights.h  →  不接 PyTorch    │
 └─────────────────────────────────┴────────────────────────────────────┘
          全班唯一课题：环境哨兵 — I2C 温湿度窗口 → MLP 判正常/异常 → LED + shell
+         ⚠ 训练/量化只在 PC；板子只做采集 + 推理（见下「双机分工」）
 
 正文结构：要答的问题 → 学完能力 / 课规 → 8 周总览表 → W1–W8 详述 → 边界与参考
 ```
@@ -24,7 +25,29 @@
 **采样内容**：每隔固定间隔读 **温度 + 湿度**（可再加滑动平均），凑成一小段 **特征向量**（例如最近 N 次的 min/max/均值）喂给模型。  
 **完成功能**：板子自己判断「环境还正常吗」——正常绿灯/静默，异常红灯 + shell 打印置信度；不是识别物体、不是语音助手。
 
-**硬件（全班统一）**：RISC-V 板 + I2C 温湿度（如 SHT 系或班内等价）+ 1 颗 LED（异常指示）；无传感器板用 **串口注入假温湿度** 仅用于 W5–6 对 golden，W7 起须真 I2C。
+**硬件（全班统一）**：RISC-V 板 + I2C 温湿度（如 SHT/DHT 系或班内等价）+ 1 颗 LED（异常指示）；板卡选型可查 [RuyiSDK support-matrix](https://github.com/ruyisdk/support-matrix)（须能裸机烧录 + OpenOCD）。无传感器板用 **串口注入假温湿度** 仅用于 W5–6 对 golden，W7 起须真 I2C。
+
+---
+
+## 双机分工（必读，避免「全在裸机上完成」）
+
+本课有 **两台环境**，职责固定，不可互换：
+
+| 环境 | 何时用 | 做什么 | 不做什么 |
+|------|--------|--------|----------|
+| **Linux PC**（x86_64 或 arm64 主机均可） | **W5–W6** | Python + **PyTorch** 训练环境哨兵 MLP；PTQ/剪枝；导出 `weights.h`、`ref_inference.c`；写内存预算表 | ❌ 不烧录、不跑板子固件；❌ 不在板上训练 |
+| **RISC-V 裸机**（开发板，无 Linux） | **W1–W4、W7–W8** | C 固件：驱动、ringbuf、shell、中断/任务；**int8 推理**；OpenOCD/串口烧录 | ❌ 不安装 PyTorch；❌ 不在板上做反向传播训练 |
+
+**数据怎么流**：
+
+```text
+  裸机 W4 采集 ──导出 CSV/日志──→  Linux W5 训练 + 量化
+                                        │
+                                        ↓ weights.h
+  裸机 W7–W8 ←──烧录含权重的固件────  PC 上 ref_inference.c 对 golden
+```
+
+**明确边界**：课上 **不要求** 在裸机用 C 复现 PyTorch 训练；若自选裸机 on-device 训练，仅作课外加分，**不能替代** W5–W6 的 PC 训练与量化对比表。
 
 ---
 
@@ -32,7 +55,7 @@
 **结构**：第 1–4 周 **嵌入式固件基础** → 第 5–8 周 **边缘 AI 推理部署**  
 **前提**：C 语言 + 计算机组成原理  
 **硬件**：RISC-V 开发板或模组（班内统一最小接线）；无板可用 QEMU  
-**工具**：Git、GNU Make、交叉 GCC/LLVM、OpenOCD、串口、Ripes；第 5 周起 PC 端 PyTorch
+**工具**：Git、GNU Make、交叉 GCC/LLVM、OpenOCD、串口、Ripes；**W5–W6 另需 Linux PC + PyTorch**（与裸机工具链分离，见「双机分工」）
 
 **课程性质**：**嵌入式系统工程课**（外设、驱动、实时行为、资源与功耗约束），用 RISC-V 真板实践；计组/汇编是手段，不是目的。后半在同等约束下做 TinyML 部署。
 
@@ -180,7 +203,7 @@
 
 ### Lab 4 + 阶段项目（环境哨兵 · 采集半环）
 
-**固定路径**：I2C 温湿度（班内统一型号或等价）→ **自写 ring buffer** → shell 周期 `print` / `dump`；按键改采样间隔。为 W5 攒「正常环境」数据；异常样本可 W5 用串口注入或现场制造。
+**固定路径**：I2C 温湿度（班内统一型号或等价）→ **自写 ring buffer** → shell 周期 `print` / `dump`；按键改采样间隔。为 W5 攒「正常环境」数据；异常样本可 W5 用串口注入或现场制造。若用 DHT 系模块，**接线与引脚** 可参考 [RuyiSDK board-docs · DHT22](https://github.com/ruyisdk/board-docs/tree/main/Duo_S/Dht22)（固件须裸机 MMIO/I2C 自写，不抄 Linux wiringX 例程）。
 
 **要求**：**自写 ring buffer 模块**；扩展 shell ≥2 命令（含 `dump`）；中断或多任务采集；`hal` / `drv_i2c` / `app_shell` 分层清晰；自写 ≥60%。
 
@@ -191,33 +214,39 @@
 # 第二部分：第 5–8 周（边缘推理 on 嵌入式）
 
 **本段目标**：在 **第 1–4 周固件** 上部署 **自写 int8 推理**，完成 AIoT 闭环。  
-**参考**：MIT 6.5940 量化与 MCU 约束、[TinyML 综述](https://arxiv.org/abs/2403.19076) 系统–算法协同。
+**参考**：MIT 6.5940（TinyML）量化与 MCU 约束、[TinyML 综述](https://arxiv.org/abs/2403.19076) 系统–算法协同；固件段脉络见下表 **Stanford CS107e**。
 
 ---
 
 ## 第 5 周：TinyML 与模型导出（15h）
 
+> **运行环境：Linux PC（PyTorch）** — 本周 **不上板、不烧录**；板子仅提供 W4 已采集的数据文件。
+
 | 主题 | 内容 |
 |------|------|
 | 边缘约束 | Flash/RAM/MACs 预算表；模型为 **板子** 而缩 |
-| 训练 | **环境哨兵** tiny MLP：W4 导出的温湿度窗口 → **正常 / 异常** 二分类 |
-| PTQ 入门 | per-tensor int8 → `weights.h` |
-| 推理 | `ref_inference.c`，PC golden |
+| 训练 | 在 **Linux** 上用 PyTorch 训 **环境哨兵** tiny MLP（W4 导出的温湿度窗口 → 正常/异常） |
+| PTQ 入门 | PC 上 per-tensor int8 → 生成 `weights.h` |
+| 推理 | PC 上 `ref_inference.c` 作 golden（浮点或 int8 参考实现） |
 
-**Lab 5**：训练 + PTQ + ref C + 预算表。**本周不上板。**
+**Lab 5**：Linux 完成训练 + PTQ + ref C + 预算表；提交 `weights.h` 与数据说明。**本周不上板。**
 
 ---
 
 ## 第 6 周：量化与压缩（15h）
 
-- per-channel PTQ、校准、逐层误差；结构化剪枝 + 再 PTQ；QAT 简介（加分）  
-- 推理实现：课内 **自写 C 算子**；CMSIS-NN / muRISCV-NN 类库作 **选学对照**
+> **运行环境：量化与对比表在 Linux PC 完成**；**自写 C 算子**可在 PC 先通过 golden 测试，W7 再链入裸机工程。
 
-**Lab 6**：Baseline / per-channel / 剪枝+PTQ；**对比表**（体积、精度、RAM、ms）+ 1 页报告。
+- per-channel PTQ、校准、逐层误差；结构化剪枝 + 再 PTQ；QAT 简介（加分）  
+- 推理实现：课内 **自写 C 算子**（PC 测通 → W7 上板）；CMSIS-NN / muRISCV-NN 类库作 **选学对照**
+
+**Lab 6**：PC 上完成 Baseline / per-channel / 剪枝+PTQ；**对比表**（体积、精度、RAM、ms）+ 1 页报告。
 
 ---
 
 ## 第 7 周：固件—推理集成（15h）
+
+> **运行环境：回到 RISC-V 裸机** — 将 W5–W6 的 `weights.h` 与自写 int8 推理 **链入 W4 固件**，板上 **仅推理、不训练**。
 
 - 静态内存部署；采样任务 + 推理任务（沿用 W3/W4）  
 - shell：`infer`、`latency`、`quant_info`  
@@ -255,15 +284,17 @@
 
 ---
 
-## 与常见嵌入式慕课脉络（采纳 / 延伸）
+## 与常见课程脉络（采纳 / 延伸）
 
-| 来源 | 有用处 | 本课落地 | 不照搬 |
-|------|--------|----------|--------|
-| Colorado **嵌入式软件与开发环境** | Git、Make、GCC、内存段、构建系统 | **W1** | ARM/Linux 主机开发流 |
-| Colorado **嵌入式软件与硬件架构** | 裸机固件、可移植 C、**环形缓冲** | **W2–W4** | MSP432 平台作业 |
-| Colorado **实时嵌入式系统** | 实时分析、RTOS、任务分配 | **W3 讲授** + 延伸选学 | Linux RT、四门专项全做 |
-| Edge Impulse 嵌入式 ML | 采集→训练→部署流程 | **W5–8** 思路；作业 **自写推理** | 云平台一键部署当作业 |
-| Arm micro:bit 类 | 入门体验 | 零基础可选预习 | 作本课主路径 |
+| 来源 | 有用处 | 本课落地 | 不照搬 | 备注（具体参考点） |
+|------|--------|----------|--------|-------------------|
+| **Stanford CS107e**（[cs107e.github.io](https://cs107e.github.io/)） | 裸机 RISC-V、无 OS；C/链接/内存；MMIO 外设；UART；中断；传感 | **W1–W4** 主脉络 | Mango Pi 作业/图形/键盘/网络整包 | **W1**：链接加载、内存布局、GPIO 寄存器 — 对应其 linking & GPIO 周。**W2**：串口协议、UART、`volatile` — 对应 Serial / UART lab。**W3**：中断、定时器、ISR 分工 — 对应 Interrupts / System Monitor。**W4**：传感器输入 — 对应 Sensor Input；本课改为 I2C 温湿度 + ringbuf。**未参考**：framebuffer 图形、键盘终端、PWM/声音、网络栈 |
+| **MIT 6.5940 TinyML**（[efficientml.ai](https://efficientml.ai/)） | 资源约束下推理；剪枝；量化（PTQ/QAT）；MCU 部署语境 | **W5–W6** 主参考；**W7–W8** 仅约束与对比表 | LLM 压缩/部署 lab、NAS 全章、分布式训练 | **W5**：Flash/RAM/MACs 预算、模型为设备而缩 — 对应 Efficient Inference 开篇 + 量化入门。**W6**：per-channel PTQ、剪枝后再量化、体积–精度–延迟 tradeoff — 对应 Quantization / Pruning 讲义与 Lab1–2 思路（作业改 **自写 C 推理**，非 PyTorch lab 原样交）。**W7–W8**：静态内存、板上延迟 — 对应 MCUNet/TinyML on MCU **讲授语境**；**未参考**：Llama 部署、扩散模型、多机训练 |
+| Colorado **嵌入式软件与开发环境** | Git、Make、GCC、内存段、构建系统 | **W1** | ARM/Linux 主机开发流 | 与 CS107e W1 互补：更偏 **工程化构建系统** 讲解 |
+| Colorado **嵌入式软件与硬件架构** | 裸机固件、可移植 C、**环形缓冲** | **W2–W4** | MSP432 平台作业 | ringbuf 专题；CS107e 未单独强调环形缓冲 |
+| Colorado **实时嵌入式系统** | 实时分析、RTOS、任务分配 | **W3 讲授** + 延伸选学 | Linux RT、四门专项全做 | |
+| Edge Impulse 嵌入式 ML | 采集→训练→部署流程 | **W5–8** 思路 | 云平台一键部署当作业 | 流程对齐 **环境哨兵**；实现必须自写 int8 |
+| Arm micro:bit 类 | 入门体验 | 零基础可选预习 | 作本课主路径 | |
 
 ---
 
@@ -283,16 +314,18 @@
 
 ## 参考资料
 
-| 资源 | 用途 |
-|------|------|
-| 《RISC-V Reader》、计组 RISC-V 版 | ISA 与体系 |
-| 开发板 SoC 手册 | MMIO、外设章 |
-| MIT 6.5940 [efficientml.ai](https://efficientml.ai) | 第 5–6 周 |
-| arXiv:2403.19076 | TinyML 背景 |
-| 裸机例程（如 lichee-rv-samples 类） | 对照寄存器，须改写后提交 |
-| Bootlin / 百问网 | Linux 驱动延伸课 |
-| Coursera Colorado 嵌入式两门 + 实时专项 | W1/W3/W4 对照；实时理论延伸 |
-| Edge Impulse 嵌入式 ML 课 | 流程参考；实现走自写 int8 |
+| 资源 | 用途 | 备注（具体参考点） |
+|------|------|-------------------|
+| 《RISC-V Reader》、计组 RISC-V 版 | ISA 与体系 | **W1** 汇编直觉；辅助 CS107e 的 RISC-V 讲义 |
+| 开发板 SoC 手册 | MMIO、外设 | **W1–W4** 唯一硬件真源；替代 CS107e 的 Mango Pi 手册 |
+| **Stanford CS107e**（[课程站](https://cs107e.github.io/) / [课表](https://cs107e.github.io/schedule/)） | 裸机固件教学法 | 见上表 **W1–W4**；平台改为班内 RISC-V 板 |
+| **MIT 6.5940 TinyML** [efficientml.ai](https://efficientml.ai) | 量化与高效推理 | 见上表 **W5–W6**；不讲 LLM 章节作作业 |
+| arXiv:2403.19076 | TinyML 背景 | **W5** 绪论；系统–算法协同概念，非周作业 |
+| 裸机例程（如 lichee-rv-samples 类） | 寄存器对照 | **W1–W4**；须改写，不可整包提交 |
+| Bootlin / 百问网 | Linux 驱动延伸 | 8 周外选修；本大纲不考 |
+| Coursera Colorado 嵌入式两门 + 实时专项 | 构建/缓冲/实时 | **W1/W3/W4**；见上表 |
+| Edge Impulse 嵌入式 ML 课 | 采集→部署流程 | **W5–8** 流程；**环境哨兵** 实现走自写 |
+| [RuyiSDK](https://ruyisdk.org/) **support-matrix** / **board-docs** | 板卡选型、温湿度接线 | 开课硬件、**W4** 引脚图 | 仅文档与选型；固件仍裸机自写 |
 
 本课主线：**RISC-V 裸机 + 工业向固件习惯（Git/Make/缓冲/实时意识）+ 边缘推理**，非 ARM 慕课翻版。
 
@@ -309,4 +342,5 @@
 
 - 对外口径：**嵌入式课**，计组是前置；W4 证明「能接传感器与固件」  
 - RTOS/Linux：用 **1–2 学时讲授 + 延伸课预告** 回应工业缺口，避免整学期变纯系统课  
-- 答辩：**驱动在哪层？采样率与缓冲？量化 tradeoff？推理 for 在哪？**
+- 答辩：**驱动在哪层？采样率与缓冲？量化 tradeoff？推理 for 在哪？**  
+- 实验机房 Linux 主机：可用 [Ruyi VS Code 插件](https://marketplace.visualstudio.com/items?itemName=RuyiSDK.ruyisdk-vscode-extension) + `ruyi install` 统一装 **主机侧** 工具（裸机烧录仍用班内 Makefile + OpenOCD）
