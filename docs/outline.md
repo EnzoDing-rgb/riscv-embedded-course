@@ -1,5 +1,15 @@
 # RISC-V 嵌入式系统与边缘推理 — 教学大纲
 
+> **推荐教材**
+>
+> 1. David A. Patterson, John L. Hennessy — **《计算机组成与设计：硬件/软件接口 (RISC-V版)》** 原书第2版  
+>    *Computer Organization and Design: The Hardware/Software Interface, RISC-V Edition*  
+>    两位图灵奖得主的 RISC-V 领域"圣经"级教材，配套中国大学 MOOC 课程。
+>
+> 2. David Patterson, Andrew Waterman — **《RISC-V开放架构设计之道》**（中译本, 2024）  
+>    *The RISC-V Reader: An Open Architecture Atlas*  
+>    RISC-V 基金会核心成员撰写，深入指令集架构技术细节，理解 ISA 设计的必读之作。
+
 ```text
 ┌──────────────────── 8 周 × 15h — RuyiSDK 工具链全覆盖 ───────────────────────────────┐
 │  W1–W2 【Linux PC】                W3–W4 【RISC-V Linux 板】  W5–W8 【PC + 板闭环】      │
