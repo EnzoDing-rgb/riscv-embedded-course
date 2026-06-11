@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ch08–11 课程调研</title>
+  <style>
+    :root {
+      --border: #c8c8c8;
+      --head: #eef2f7;
+      --decision: #e8f4ea;
+      --warn: #fff3cd;
+      --text: #1a1a1a;
+      --muted: #555;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
+      color: var(--text);
+      background: #fafafa;
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    main { max-width: 960px; margin: 0 auto; padding: 24px 20px 56px; }
+    h1 { margin: 0 0 6px; font-size: 1.6rem; }
+    h2 {
+      margin: 36px 0 12px;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 6px;
+    }
+    h3 { margin: 20px 0 8px; font-size: 1.05rem; }
+    .meta { color: var(--muted); font-size: 0.92rem; margin-bottom: 20px; }
+    .decision-box {
+      background: var(--decision);
+      border: 1px solid #b8dfc0;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 16px 0;
+    }
+    .decision-box h2 {
+      margin: 0 0 10px;
+      border: none;
+      padding: 0;
+      font-size: 1.15rem;
+    }
+    .decision-box ul { margin: 0; padding-left: 1.25rem; }
+    .decision-box li { margin: 6px 0; }
+    .warn-box {
+      background: var(--warn);
+      border: 1px solid #e6d48a;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 0.95rem;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th { background: var(--head); text-align: center; }
+    td.center { text-align: center; vertical-align: middle; }
+    code {
+      font-family: ui-monospace, monospace;
+      font-size: 0.9em;
+      background: #f3f4f6;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1e40af;
+      margin-right: 4px;
+    }
+    .tag.green { background: #dcfce7; color: #166534; }
+    .tag.gray { background: #e5e7eb; color: #374151; }
+    dl { margin: 0; }
+    dt { font-weight: 600; margin-top: 10px; }
+    dd { margin: 4px 0 0 0; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>ch08–11 课程调研</h1>
+    <p class="meta">给老师的决策稿 · 2026-06 · 基于 <code>course-outline.md</code>（老师 ch01–07）与讨论对齐 · 不改现有大纲文件</p>
+
+    <!-- ========== 决策摘要（只看这里） ========== -->
+    <div class="decision-box">
+      <h2>决策摘要（5 分钟读完）</h2>
+      <ul>
+        <li><strong>ch08 主线期末作品</strong>：定为 <strong>「语音关键词控灯」</strong>——对着麦克风说固定几个词（如开/关/闪），板子识别后控制 LED。不用缩写词，不叫「环境哨兵」「联网终端」。</li>
+        <li><strong>ch10 原「语音扩展」</strong>：与 ch08 合并，<strong>ch10 需换新题</strong>（建议见下表，待老师确认）。</li>
+        <li><strong>ch09 OpenCV</strong>：建议 <strong>保留</strong> 为扩展（摄像头 + 基础图像处理），与 ch08 语音线互补；理由见「知识调研」。</li>
+        <li><strong>Agent / 微信控家电</strong>：建议 <strong>不进主课</strong>，仅作「了解即可」一段；学习成本高、依赖云 API/公网、和 RISC-V 嵌入式主线弱耦合。</li>
+        <li><strong>硬件</strong>：决策按 <strong>性能更强的 Linux RISC-V 板</strong>（如 P550 / EBC7700 档）；训练与推理均在 <strong>CPU</strong> 上完成（无 GPU 假设）。</li>
+      </ul>
+    </div>
+
+    <div class="warn-box">
+      <strong>⚠ 与现 ch01–07 的一处硬缺口</strong>：老师大纲 ch05 重点是 DHT22 温湿度 + OLED，<strong>未教麦克风 / I2S</strong>。若 ch08 做语音控灯，需在 ch05 增加「麦克风采集」或 ch08 前加 1 次 bridging lab。见下文映射表「缺口」列。
+    </div>
+
+    <h2>ch08–11 推荐分工（待老师确认）</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>章</th>
+            <th>建议定位</th>
+            <th>一句话</th>
+            <th>学习成本</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="center"><strong>ch08</strong></td>
+            <td><span class="tag green">主线综合</span></td>
+            <td>整合 ch01–07：麦克风持续采集 → 提取声音特征 → 小模型识别关键词 → GPIO 控 LED + 串口显示结果</td>
+            <td class="center">中高（4–6 周实验量）</td>
+          </tr>
+          <tr>
+            <td class="center"><strong>ch09</strong></td>
+            <td><span class="tag">扩展一</span></td>
+            <td>摄像头 + OpenCV：采集图像、灰度/边缘等基础处理（与 ch08 语音形成「听 / 看」两条 AI 线）</td>
+            <td class="center">中</td>
+          </tr>
+          <tr>
+            <td class="center"><strong>ch10</strong></td>
+            <td><span class="tag">扩展二</span></td>
+            <td><strong>待选</strong>：① 联网发布（HTTP/MQTT 上报 ch08 状态）② 温湿度 IoT 小项目 ③ 性能优化专题。原语音题已并入 ch08。</td>
+            <td class="center">低–中</td>
+          </tr>
+          <tr>
+            <td class="center"><strong>ch11</strong></td>
+            <td><span class="tag gray">系统认识</span></td>
+            <td>保留 Buildroot + Device Tree 选读：认识镜像从哪来、外设节点什么意思（不改变 ch08 主线）</td>
+            <td class="center">低（偏运维/系统）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>ch01–07 → ch08「语音关键词控灯」前置映射</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>章</th>
+            <th>学生已会什么</th>
+            <th>在 ch08 里用在哪</th>
+            <th>缺口</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ch01</td>
+            <td><code>ruyi</code>、QEMU/板卡登录</td>
+            <td>开发环境、部署演示</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>ch02</td>
+            <td>交叉编译、Makefile、ELF</td>
+            <td>编译推理程序、看二进制体积</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>ch03</td>
+            <td>GPIO、按键</td>
+            <td><strong>LED 控制</strong>（识别结果驱动灯）</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>ch04</td>
+            <td>UART、串口调试</td>
+            <td>打印识别结果、置信度、调试</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>ch05</td>
+            <td>I2C、DHT22、OLED、PWM</td>
+            <td>OLED 可显示当前识别词；PWM 可做呼吸灯反馈</td>
+            <td><strong>缺麦克风 / I2S / 音频缓冲</strong>（需补）</td>
+          </tr>
+          <tr>
+            <td>ch06</td>
+            <td>文件 I/O、配置、日志</td>
+            <td>保存录音样本、训练日志、运行日志</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>ch07</td>
+            <td>pthread、生产者–消费者</td>
+            <td><strong>采集线程 + 识别线程</strong> 分工</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>补缺口最小改法（建议写进给老师的话）</strong>：在 ch05 增加 1–2 小节「I2S/USB 麦克风 + 录一段 WAV」，或 ch05 实验二选一（温湿度 <em>或</em> 麦克风），保证进 ch08 人人有音频输入。</p>
+
+    <!-- ========== 知识调研 ========== -->
+    <h2>知识调研</h2>
+
+    <h3>1. 「语音关键词控灯」是什么？难不难？</h3>
+    <dl>
+      <dt>是什么</dt>
+      <dd>不是 ChatGPT，不是语音识别转文字。是<strong>只听几个固定词</strong>（如「开」「关」「闪」），用小神经网络判断「当前说的是哪个词」，然后控 LED。工业里叫 keyword spotting / 唤醒词，课上统一说<strong>语音关键词控灯</strong>即可。</dd>
+      <dt>难不难</dt>
+      <dd><strong>中等</strong>，比「联网 HTTP 状态页」更炫，比「大模型 Agent」简单得多。难点在：① 麦克风接线与采音 ② 每人录一点训练样本 ③ 把训练好的小模型嵌进 C 程序。算法本身有 MLPerf Tiny、Google Speech Commands 等现成参考，不必从零推公式。</dd>
+      <dt>训练放哪</dt>
+      <dd>贵 RISC-V 板<strong>可以用 CPU + Python（numpy/PyTorch）</strong> 训 tiny 模型，认知没错；就是比 x86 慢。也可 <strong>PC 训练 → 导出权重 → 板上只推理</strong>，课时更稳。调研建议：<strong>板上推理必选，训练二选一写进课规</strong>。</dd>
+    </dl>
+
+    <h3>2. 老师为什么提 OpenCV？主流吗？和找工作？</h3>
+    <dl>
+      <dt>OpenCV 是什么</dt>
+      <dd>开源<strong>计算机视觉库</strong>：读摄像头、处理图像（灰度、滤波、边缘、人脸检测等）。C++/Python 都能用，嵌入式 Linux 上很常见。</dd>
+      <dt>老师为何放在 ch09</dt>
+      <dd>ch01–07 已会 GPIO/线程/文件；加摄像头是自然的<strong>第二条传感链路</strong>（ch08 听、ch09 看）。OpenCV 是「在板子上跑视觉」的<strong>事实标准</strong>，和 Ruyi 文档里 LicheePi 4A 的 OpenCV/YOLO 示例同一脉络。</dd>
+      <dt>主流吗</dt>
+      <dd><strong>是。</strong> 机器人、工业相机、安防、车载前视、质检里大量用 OpenCV 或与其同类的 pipeline（很多公司后来用更高级的 SDK，但<strong>课里 OpenCV 仍是入门正路</strong>）。</dd>
+      <dt>和就业</dt>
+      <dd>单独「会 OpenCV 几行 API」不够找工作；<strong>「嵌入式 Linux + 摄像头采集 + 图像预处理 + 和模型/业务对接」</strong> 是真实岗位技能（智能摄像头、边缘视觉、工控检测）。OpenCV 是这条路上的<strong>工具课</strong>，不是噱头。</dd>
+    </dl>
+
+    <h3>3. Agent / 微信控家电（OpenClaw 等）—— 为何建议不进主课</h3>
+    <dl>
+      <dt>是什么</dt>
+      <dd>在本机跑 Agent 网关，接微信/飞书，用自然语言让大模型调工具（如 Home Assistant）控家电。</dd>
+      <dt>学习成本</dt>
+      <dd>高：公网回调、API Key、微信插件、Agent 配置、安全配对；和「学生写 C/线程/GPIO」<strong>技能栈重叠少</strong>。</dd>
+      <dt>和 RISC-V 课关系</dt>
+      <dd>可在 x86/ARM 服务器上演示；<strong>不必绑 RISC-V 板</strong>。适合讲座或 ch11 后「行业见闻」，不适合替代 OpenCV/Buildroot 实验。</dd>
+    </dl>
+
+    <h3>4. 硬件：贵板 vs 便宜板</h3>
+    <dl>
+      <dt>区别大吗</dt>
+      <dd>对<strong>本课 tiny 语音模型</strong>：差别主要在<strong>编译/训练快一点、内存宽裕一点</strong>，不是必须 GPU。P550 / EBC7700 档 CPU 训小模型、跑 OpenCV 更从容。</dd>
+      <dt>仍需统一</dt>
+      <dd>全班<strong>同一套麦克风 + LED 接线</strong> 比板子贵不贵更重要；I2S 兼容性先查 support-matrix。</dd>
+    </dl>
+
+    <h2>建议你交给老师的一句话</h2>
+    <p>「ch08 建议定为<strong>语音关键词控灯</strong>（整合 ch01–07，补 ch05 麦克风）；ch09 保留 OpenCV 扩展；ch10 因语音升主线需换新题；Agent 控家电调研后建议不做主课实验；硬件按高性能 RISC-V Linux 板 + CPU 训练/推理即可。」</p>
+
+    <p class="meta">预览：项目根目录 <code>./start.sh</code> → 浏览器打开入口页，再点进本报告。</p>
+  </main>
+</body>
+</html>
