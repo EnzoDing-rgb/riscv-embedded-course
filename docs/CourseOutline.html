@@ -134,6 +134,8 @@
     tr.mod-linux td { background: var(--mod-linux); }
     tr.mod-ml td { background: var(--mod-ml); }
     table.summary td { text-align: left; }
+    table.bom td { text-align: left; background: #fff; }
+    table.bom td.provider { text-align: center; white-space: nowrap; }
     table.detail { table-layout: fixed; }
     table.detail td.merge { text-align: center; }
     table.detail td.section { text-align: left; }
@@ -206,7 +208,7 @@
       <div class="flow-step mod-board">
         <span class="flow-ch">ch03–05</span>
         <p class="flow-title">开发板基础篇</p>
-        <p class="flow-desc">GPIO、UART、MNIST 读入</p>
+        <p class="flow-desc">GPIO、UART、外设与显示</p>
       </div>
       <div class="flow-step mod-linux">
         <span class="flow-ch">ch06–07</span>
@@ -237,6 +239,42 @@
     <span><i class="mod-ml"></i>模型训练与部署篇</span>
   </div>
 
+  <h2>物料清单</h2>
+  <p class="note">自备电脑 SSH 连板；不需 HDMI 大显示器。ch05 用小型 OLED 模块，不是电脑外接屏。</p>
+  <div class="table-wrap">
+    <table class="bom">
+      <thead>
+        <tr>
+          <th style="width:18%">物料</th>
+          <th style="width:62%">说明</th>
+          <th style="width:20%">提供方</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>个人电脑</td>
+          <td>可联网；安装 <code>ruyi</code>，SSH/串口连开发板</td>
+          <td class="provider">学生自备</td>
+        </tr>
+        <tr>
+          <td>RISC-V Linux 开发板</td>
+          <td>可运行 Linux，兼容 RuyiSDK（如 LicheePi 4A、Milk-V Meles，见 <a href="https://github.com/ruyisdk/support-matrix">support-matrix</a>）；含电源、网线；板载 LED 与按键</td>
+          <td class="provider">课程提供</td>
+        </tr>
+        <tr>
+          <td>USB 转串口线</td>
+          <td>ch04 串口调试</td>
+          <td class="provider">课程提供</td>
+        </tr>
+        <tr>
+          <td>OLED 小屏模块</td>
+          <td>0.96 寸 I2C 或 SPI OLED + 杜邦线；ch05 显示样本图案</td>
+          <td class="provider">课程提供</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <h2>章节总览</h2>
   <p class="note">每章一行：二级章节 + 目标 / 实验 / 成果。</p>
   <div class="table-wrap">
@@ -256,57 +294,57 @@
           <td>ch01</td>
           <td>开发环境篇</td>
           <td>RuyiSDK、开发板与 QEMU 上手</td>
-          <td>统一开发环境；确认板载 Python/NumPy 可用于后续训练</td>
-          <td>安装 <code>ruyi</code>；QEMU/板卡登录；检查 Python 环境</td>
-          <td>能进入目标系统并跑通 <code>python3 -c "import numpy"</code></td>
+          <td>建立统一开发环境和最小运行闭环</td>
+          <td>安装 <code>ruyi</code>；启动 QEMU 或板卡；远程登录系统</td>
+          <td>完成统一环境配置并能进入系统</td>
         </tr>
         <tr class="mod-env">
           <td>ch02</td>
           <td>开发环境篇</td>
           <td>工具链、工程模板与第一个程序</td>
-          <td>编译链接运行；认识模型权重也是二进制产物</td>
-          <td>Hello World；ELF/<code>readelf</code>；基准测试</td>
-          <td>能编译 C 程序并解释 <code>.text</code> / <code>.rodata</code> 体积</td>
+          <td>说明程序如何编译、链接、运行</td>
+          <td>Hello World；ELF 观察；基准测试对比</td>
+          <td>形成「能编译、能运行、能解释二进制」的最小工程能力</td>
         </tr>
         <tr class="mod-board">
           <td>ch03</td>
           <td>开发板基础篇</td>
           <td>GPIO 输入输出与交互</td>
-          <td>板级控制；LED 预留给推理结果展示</td>
-          <td>Blink；Button；按键切换 digit 显示模式</td>
-          <td>GPIO 驱动 LED，可映射 0–9 识别结果</td>
+          <td>形成最早的板卡控制能力</td>
+          <td>Blink；Button；按键控制 LED</td>
+          <td>完成第一个真实板级交互程序</td>
         </tr>
         <tr class="mod-board">
           <td>ch04</td>
           <td>开发板基础篇</td>
           <td>串口通信与板级调试</td>
-          <td>串口日志与命令行；训练/推理指标输出通道</td>
-          <td>UART Echo；串口打印 epoch loss</td>
-          <td>可复用串口工具，后续接 <code>infer</code> 命令</td>
+          <td>建立板卡调试与交互通道</td>
+          <td>UART Echo；串口命令回显</td>
+          <td>获得可复用的串口调试工具</td>
         </tr>
         <tr class="mod-board">
           <td>ch05</td>
           <td>开发板基础篇</td>
-          <td>图像数据与外设显示</td>
-          <td>MNIST 28×28 灰度图读入内存；本地可视化</td>
-          <td>读 IDX 文件；OLED 显示一张 digit；PWM 训练心跳灯</td>
-          <td>板载加载 MNIST 样本并在 OLED 显示</td>
+          <td>常用外设与人机交互</td>
+          <td>完成「采集—显示」局部闭环</td>
+          <td>呼吸灯；OLED 显示 MNIST 样本图案</td>
+          <td>形成可工作的本地显示终端</td>
         </tr>
         <tr class="mod-linux">
           <td>ch06</td>
           <td>Linux 应用开发篇</td>
           <td>文件、配置与日志</td>
           <td>使程序具备持久化与可维护性</td>
-          <td>MNIST 索引或运行数据落盘；配置化启动；日志记录</td>
+          <td>MNIST 数据落盘；配置化启动；日志记录</td>
           <td>程序从「示例」升级为「可维护应用」</td>
         </tr>
         <tr class="mod-linux">
           <td>ch07</td>
           <td>Linux 应用开发篇</td>
           <td>线程与任务协同</td>
-          <td>生产者–消费者；为推理线程架构打样</td>
-          <td>双线程：读 batch + 预留 infer slot</td>
-          <td>多线程程序，共享队列与互斥锁可用</td>
+          <td>让程序具备稳定运行能力</td>
+          <td>双线程采样与显示；线程同步调试</td>
+          <td>形成可持续运行的多线程程序</td>
         </tr>
         <tr class="mod-ml">
           <td>ch08</td>
@@ -366,9 +404,9 @@
           <td rowspan="6" class="merge">ch01</td>
           <td rowspan="6" class="merge">开发环境篇</td>
           <td class="section">1.1 查询 RuyiSDK 支持状态与目标环境</td>
-          <td rowspan="6" class="merge section">统一开发环境；确认板载 Python/NumPy 可用于后续训练</td>
+          <td rowspan="6" class="merge section">建立统一开发环境和最小运行闭环</td>
           <td rowspan="6" class="merge section">安装 <code>ruyi</code>；启动 QEMU 或板卡；SSH/串口登录；检查 Python/NumPy</td>
-          <td rowspan="6" class="merge section">能进入目标系统并跑通 NumPy</td>
+          <td rowspan="6" class="merge section">完成统一环境配置并能进入系统</td>
           <td rowspan="6" class="merge glossary section"><dl>
             <dt>RuyiSDK</dt><dd>软件所维护的 RISC-V 开发工具集，含包管理器、交叉工具链和板卡镜像。</dd>
             <dt>ruyi</dt><dd>命令行工具，用来安装编译器和 sysroot、下载板卡系统镜像。</dd>
@@ -383,16 +421,16 @@
         <tr class="mod-env"><td class="section">1.3 启动 QEMU <code>virt</code> 或连接开发板</td></tr>
         <tr class="mod-env"><td class="section">1.4 SSH/SCP/串口登录与文件传输</td></tr>
         <tr class="mod-env"><td class="section">1.5 <code>ruyi device provision</code> 使用边界</td></tr>
-        <tr class="mod-env"><td class="section">1.6 验证板载 <code>python3</code> + NumPy（MLSys 前置）<span class="tag">ML</span></td></tr>
+        <tr class="mod-env"><td class="section">1.6 验证板载 <code>python3</code> + NumPy<span class="tag">ML</span></td></tr>
 
         <!-- ch02 -->
         <tr class="mod-env">
           <td rowspan="6" class="merge">ch02</td>
           <td rowspan="6" class="merge">开发环境篇</td>
           <td class="section">2.1 区分 host、target 与 sysroot</td>
-          <td rowspan="6" class="merge section">编译链接运行；认识模型权重也是二进制产物</td>
-          <td rowspan="6" class="merge section">Hello World；<code>readelf</code>/<code>ldd</code>；CoreMark 对比</td>
-          <td rowspan="6" class="merge section">能编译 C 程序并解释段大小</td>
+          <td rowspan="6" class="merge section">说明程序如何编译、链接、运行</td>
+          <td rowspan="6" class="merge section">Hello World；ELF 观察；基准测试对比</td>
+          <td rowspan="6" class="merge section">形成「能编译、能运行、能解释二进制」的最小工程能力</td>
           <td rowspan="6" class="merge glossary section"><dl>
             <dt>host</dt><dd>你写代码、运行编译器的 PC。</dd>
             <dt>target</dt><dd>程序最终运行的 RISC-V 开发板或 QEMU 仿真环境。</dd>
@@ -404,20 +442,20 @@
             <dt>.rodata / .bin</dt><dd>ELF 中存放只读常量的段；按字节存储的原始二进制文件（如权重）。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-env"><td class="section">2.2 编译 Hello World 并用 <code>readelf</code> 观察</td></tr>
-        <tr class="mod-env"><td class="section">2.3 ELF 关键字段与动态依赖</td></tr>
-        <tr class="mod-env"><td class="section">2.4 Makefile 与统一工程目录</td></tr>
-        <tr class="mod-env"><td class="section">2.5 CoreMark/Dhrystone 基准与 CPU 算力感知<span class="tag">ML</span></td></tr>
-        <tr class="mod-env"><td class="section">2.6 权重文件 <code>.bin</code> / <code>.rodata</code> 体积初探<span class="tag">ML</span></td></tr>
+        <tr class="mod-env"><td class="section">2.2 编译 Hello World 并使用 <code>readelf</code>、<code>ldd</code> 观察</td></tr>
+        <tr class="mod-env"><td class="section">2.3 解释 ELF 关键字段与动态依赖</td></tr>
+        <tr class="mod-env"><td class="section">2.4 编写 Makefile 与统一工程目录</td></tr>
+        <tr class="mod-env"><td class="section">2.5 运行 CoreMark/Dhrystone 并说明结果边界</td></tr>
+        <tr class="mod-env"><td class="section">2.6 观察 <code>.rodata</code> 段体积（含权重文件存放位置）<span class="tag">ML</span></td></tr>
 
         <!-- ch03 -->
         <tr class="mod-board">
           <td rowspan="5" class="merge">ch03</td>
           <td rowspan="5" class="merge">开发板基础篇</td>
-          <td class="section">3.1 GPIO 输出控制 LED</td>
-          <td rowspan="5" class="merge section">板级控制；LED 预留给推理结果展示</td>
-          <td rowspan="5" class="merge section">Blink；Button；digit 模式切换</td>
-          <td rowspan="5" class="merge section">GPIO 可映射 0–9 识别结果</td>
+          <td class="section">3.1 使用 GPIO 输出控制 LED</td>
+          <td rowspan="5" class="merge section">形成最早的板卡控制能力</td>
+          <td rowspan="5" class="merge section">Blink；Button；按键控制 LED</td>
+          <td rowspan="5" class="merge section">完成第一个真实板级交互程序</td>
           <td rowspan="5" class="merge glossary section"><dl>
             <dt>GPIO</dt><dd>芯片上可由软件设为输入或输出的引脚，用来读按键电平、控制 LED 亮灭。</dd>
             <dt>轮询</dt><dd>程序循环读取引脚状态，判断按键是否按下。</dd>
@@ -425,92 +463,92 @@
             <dt>状态机</dt><dd>程序按几种固定状态和切换条件组织行为，例如切换 LED 显示模式。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-board"><td class="section">3.2 GPIO 输入读取按键</td></tr>
-        <tr class="mod-board"><td class="section">3.3 轮询与消抖</td></tr>
-        <tr class="mod-board"><td class="section">3.4 状态机：按键切换 LED 显示模式</td></tr>
-        <tr class="mod-board"><td class="section">3.5 设计 ch10 推理结果 → GPIO 映射表<span class="tag">ML</span></td></tr>
+        <tr class="mod-board"><td class="section">3.2 使用 GPIO 输入读取按键</td></tr>
+        <tr class="mod-board"><td class="section">3.3 使用轮询与消抖稳定按键输入</td></tr>
+        <tr class="mod-board"><td class="section">3.4 使用状态机实现按键控制 LED 模式</td></tr>
+        <tr class="mod-board"><td class="section">3.5 选读：GPIO 输出与后续识别结果展示<span class="tag">ML</span></td></tr>
 
         <!-- ch04 -->
         <tr class="mod-board">
           <td rowspan="6" class="merge">ch04</td>
           <td rowspan="6" class="merge">开发板基础篇</td>
-          <td class="section">4.1 UART 参数与 TTY 连接</td>
-          <td rowspan="6" class="merge section">串口日志与命令行；训练/推理指标输出</td>
-          <td rowspan="6" class="merge section">UART Echo；打印 mock epoch loss</td>
-          <td rowspan="6" class="merge section">串口工具可接训练日志与 <code>infer</code></td>
+          <td class="section">4.1 配置 UART 通信参数</td>
+          <td rowspan="6" class="merge section">建立板卡调试与交互通道</td>
+          <td rowspan="6" class="merge section">UART Echo；串口命令回显</td>
+          <td rowspan="6" class="merge section">获得可复用的串口调试工具</td>
           <td rowspan="6" class="merge glossary section"><dl>
             <dt>UART</dt><dd>按固定位速率逐字节收发数据的硬件串口。</dd>
             <dt>TTY</dt><dd>Linux 中表示终端设备的文件节点，串口登录后对应一个 TTY。</dd>
             <dt>Echo</dt><dd>把收到的字符原样发回，用于确认串口收发是否正常。</dd>
-            <dt>epoch / loss / acc</dt><dd>训练集完整过一遍叫一个 epoch；loss 是预测误差；acc 是分类正确的比例。</dd>
-            <dt>infer</dt><dd>对输入图像执行一次模型推理，得到识别出的数字。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-board"><td class="section">4.2 串口收发与 Echo</td></tr>
-        <tr class="mod-board"><td class="section">4.3 结构化日志格式（timestamp / level）</td></tr>
-        <tr class="mod-board"><td class="section">4.4 模拟打印训练 epoch / loss / acc<span class="tag">ML</span></td></tr>
-        <tr class="mod-board"><td class="section">4.5 串口命令解析框架（为 <code>infer</code> 预留）<span class="tag">ML</span></td></tr>
-        <tr class="mod-board"><td class="section">4.6 命令回显与错误提示</td></tr>
+        <tr class="mod-board"><td class="section">4.2 使用 TTY 与串口工具连接开发板</td></tr>
+        <tr class="mod-board"><td class="section">4.3 编写串口收发与 Echo 程序</td></tr>
+        <tr class="mod-board"><td class="section">4.4 通过串口输出调试日志（实时，不落盘）</td></tr>
+        <tr class="mod-board"><td class="section">4.5 实现串口命令回显工具</td></tr>
+        <tr class="mod-board"><td class="section">4.6 选读：串口命令框架（为后续 <code>infer</code> 预留）<span class="tag">ML</span></td></tr>
 
         <!-- ch05 -->
         <tr class="mod-board">
-          <td rowspan="5" class="merge">ch05</td>
-          <td rowspan="5" class="merge">开发板基础篇</td>
-          <td class="section">5.1 灰度图像素布局（28×28 = 784 字节）<span class="tag">ML</span></td>
-          <td rowspan="5" class="merge section">MNIST 读入内存；本地可视化</td>
-          <td rowspan="5" class="merge section">读 IDX；OLED 显示 digit；PWM 心跳灯</td>
-          <td rowspan="5" class="merge section">板载加载并显示 MNIST 样本</td>
-          <td rowspan="5" class="merge glossary section"><dl>
-            <dt>MNIST</dt><dd>手写数字 0–9 的公开图像数据集，每张 28×28 灰度像素。</dd>
+          <td rowspan="6" class="merge">ch05</td>
+          <td rowspan="6" class="merge">开发板基础篇</td>
+          <td class="section">5.1 使用 PWM 控制 LED 亮度</td>
+          <td rowspan="6" class="merge section">完成「采集—显示」局部闭环</td>
+          <td rowspan="6" class="merge section">呼吸灯；OLED 显示 MNIST 样本图案</td>
+          <td rowspan="6" class="merge section">形成可工作的本地显示终端</td>
+          <td rowspan="6" class="merge glossary section"><dl>
+            <dt>PWM</dt><dd>通过改变方波占空比调节 LED 平均亮度；呼吸灯即占空比周期性变化。</dd>
             <dt>灰度图</dt><dd>每个像素用一个 0–255 的字节表示亮度，不含颜色信息。</dd>
-            <dt>IDX</dt><dd>MNIST 官方二进制文件格式，用来存放图像和标签。</dd>
-            <dt>buffer</dt><dd>程序里一块连续内存，暂存放读入的图像字节。</dd>
+            <dt>MNIST</dt><dd>手写数字 0–9 的公开图像数据集，每张 28×28 灰度像素。</dd>
             <dt>I2C / SPI</dt><dd>两种短距离总线协议，用来连接 OLED 等外设芯片。</dd>
             <dt>OLED</dt><dd>可显示文字或点阵图案的小型屏幕。</dd>
-            <dt>PWM</dt><dd>通过改变方波占空比调节 LED 平均亮度。</dd>
+            <dt>buffer</dt><dd>程序里一块连续内存，暂存待显示的图像字节。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-board"><td class="section">5.2 MNIST IDX 格式与 onboard 解压</td></tr>
-        <tr class="mod-board"><td class="section">5.3 用 C 或 Python 读取单张样本到 buffer</td></tr>
-        <tr class="mod-board"><td class="section">5.4 I2C/SPI 驱动 OLED 显示 28×28 图案</td></tr>
-        <tr class="mod-board"><td class="section">5.5 PWM 呼吸灯作为训练进行中指示</td></tr>
+        <tr class="mod-board"><td class="section">5.2 理解灰度图像素布局（28×28 = 784 字节）<span class="tag">ML</span></td></tr>
+        <tr class="mod-board"><td class="section">5.3 通过 I2C/SPI 连接和识别外设</td></tr>
+        <tr class="mod-board"><td class="section">5.4 使用 OLED 显示样本图案（内置静态数组）</td></tr>
+        <tr class="mod-board"><td class="section">5.5 串口命令控制 PWM / GPIO 输出<span class="tag">ML</span></td></tr>
+        <tr class="mod-board"><td class="section">5.6 实现本地显示闭环</td></tr>
 
         <!-- ch06 -->
         <tr class="mod-linux">
-          <td rowspan="5" class="merge">ch06</td>
-          <td rowspan="5" class="merge">Linux 应用开发篇</td>
-          <td class="section">6.1 使用文件 I/O 保存 MNIST 样本索引或运行数据</td>
-          <td rowspan="5" class="merge section">使程序具备持久化与可维护性</td>
-          <td rowspan="5" class="merge section">MNIST 索引或运行数据落盘；配置化启动；日志记录</td>
-          <td rowspan="5" class="merge section">程序从「示例」升级为「可维护应用」</td>
-          <td rowspan="5" class="merge glossary section">无</td>
+          <td rowspan="6" class="merge">ch06</td>
+          <td rowspan="6" class="merge">Linux 应用开发篇</td>
+          <td class="section">6.1 使用文件 I/O 保存运行数据</td>
+          <td rowspan="6" class="merge section">使程序具备持久化与可维护性</td>
+          <td rowspan="6" class="merge section">MNIST 数据落盘；配置化启动；日志记录</td>
+          <td rowspan="6" class="merge section">程序从「示例」升级为「可维护应用」</td>
+          <td rowspan="6" class="merge glossary section"><dl>
+            <dt>IDX</dt><dd>MNIST 官方二进制文件格式，用来存放图像和标签。</dd>
+            <dt>文件 I/O</dt><dd>用 open/read/write 等系统调用读写磁盘文件。</dd>
+          </dl></td>
         </tr>
-        <tr class="mod-linux"><td class="section">6.2 编写配置文件读取程序</td></tr>
-        <tr class="mod-linux"><td class="section">6.3 写入运行日志和数据日志</td></tr>
-        <tr class="mod-linux"><td class="section">6.4 处理错误并输出可诊断信息</td></tr>
-        <tr class="mod-linux"><td class="section">6.5 整理可维护的应用程序目录结构</td></tr>
+        <tr class="mod-linux"><td class="section">6.2 读取 MNIST IDX 并加载样本到 buffer（Python）<span class="tag">ML</span></td></tr>
+        <tr class="mod-linux"><td class="section">6.3 编写配置文件读取程序</td></tr>
+        <tr class="mod-linux"><td class="section">6.4 写入运行日志和数据日志（落盘；ch04 为串口实时输出）</td></tr>
+        <tr class="mod-linux"><td class="section">6.5 处理错误并输出可诊断信息</td></tr>
+        <tr class="mod-linux"><td class="section">6.6 整理可维护的应用程序目录结构</td></tr>
 
         <!-- ch07 -->
         <tr class="mod-linux">
           <td rowspan="6" class="merge">ch07</td>
           <td rowspan="6" class="merge">Linux 应用开发篇</td>
-          <td class="section">7.1 创建 pthread 读 batch 线程</td>
-          <td rowspan="6" class="merge section">生产者–消费者；推理线程架构打样</td>
-          <td rowspan="6" class="merge section">双线程 queue；互斥锁调试</td>
-          <td rowspan="6" class="merge section">多线程 + 共享队列可用</td>
+          <td class="section">7.1 创建 pthread 采样线程</td>
+          <td rowspan="6" class="merge section">让程序具备稳定运行能力</td>
+          <td rowspan="6" class="merge section">双线程采样与显示；线程同步调试</td>
+          <td rowspan="6" class="merge section">形成可持续运行的多线程程序</td>
           <td rowspan="6" class="merge glossary section"><dl>
             <dt>pthread</dt><dd>POSIX 线程库，在 Linux 上创建和管理多个并发执行的线程。</dd>
-            <dt>batch</dt><dd>一次送入模型处理的多张图像组成的一组。</dd>
             <dt>生产者–消费者</dt><dd>一个线程往队列放入数据，另一个线程取出数据并处理。</dd>
             <dt>互斥锁</dt><dd>保证同一时刻只有一个线程读写共享数据，避免数据错乱。</dd>
-            <dt>条件变量</dt><dd>队列空或满时让线程等待，有数据可用时再唤醒。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-linux"><td class="section">7.2 互斥锁保护共享 buffer</td></tr>
-        <tr class="mod-linux"><td class="section">7.3 生产者：按索引推送 MNIST 样本<span class="tag">ML</span></td></tr>
-        <tr class="mod-linux"><td class="section">7.4 消费者：预留 infer slot（mock 输出 digit）<span class="tag">ML</span></td></tr>
-        <tr class="mod-linux"><td class="section">7.5 条件变量 / 队列深度控制</td></tr>
-        <tr class="mod-linux"><td class="section">7.6 线程拆分对照 ch10 推理架构</td></tr>
+        <tr class="mod-linux"><td class="section">7.2 使用互斥与同步保护共享数据</td></tr>
+        <tr class="mod-linux"><td class="section">7.3 拆分采集、显示和记录任务</td></tr>
+        <tr class="mod-linux"><td class="section">7.4 使用生产者–消费者模型传递 MNIST 样本<span class="tag">ML</span></td></tr>
+        <tr class="mod-linux"><td class="section">7.5 选读：Mailbox 与线程队列的适用边界</td></tr>
+        <tr class="mod-linux"><td class="section">7.6 选读：双线程架构与后续推理部署<span class="tag">ML</span></td></tr>
 
         <!-- ch08 -->
         <tr class="mod-ml">
@@ -593,14 +631,14 @@
 
   <h2>章节衔接</h2>
   <ul class="relations">
-    <li>ch01 NumPy 检查 → ch08 板载训练直接复用同一 Python 环境</li>
-    <li>ch02 <code>.rodata</code> 体积意识 → ch09 量化前后模型大小对比</li>
-    <li>ch03 GPIO 映射表 → ch10 推理结果驱动 LED</li>
-    <li>ch04 串口日志格式 + <code>infer</code> 框架 → ch08 训练日志 / ch10 推理命令</li>
-    <li>ch05 MNIST buffer + OLED → ch08 输入张量 / ch10 可视化</li>
-    <li>ch06 配置文件与日志落盘 → ch08 训练过程记录与 ch09 权重文件管理</li>
+    <li>ch01 NumPy 检查 → ch08 板载训练复用同一 Python 环境</li>
+    <li>ch02 <code>.rodata</code> 段观察 → ch09 量化前后模型体积对比</li>
+    <li>ch03 GPIO 控制 → ch10 识别结果驱动 LED</li>
+    <li>ch04 串口命令框架 → ch10 <code>infer</code> 命令</li>
+    <li>ch05 灰度 buffer + OLED → ch08 训练输入；ch06 起从文件加载完整数据集</li>
+    <li>ch04 串口实时日志 / ch06 落盘日志 → ch08 训练过程记录</li>
     <li>ch07 生产者–消费者队列 → ch10 推理线程与输入队列</li>
-    <li>ch08 fp32 <code>weights.bin</code> + golden → ch09 量化输入 → ch10 int8 部署</li>
+    <li>ch08 fp32 <code>weights.bin</code> + golden → ch09 量化 → ch10 int8 部署</li>
   </ul>
 
   <h2>硬课规</h2>
@@ -611,7 +649,7 @@
   </ul>
 
   <footer>
-    本地预览：仓库根目录 <code>./start.sh</code> → <code>http://127.0.0.1:8765/</code>
+    用浏览器直接打开本文件即可。
   </footer>
 </main>
 </body>
