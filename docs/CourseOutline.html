@@ -349,7 +349,7 @@
         <tr class="mod-ml">
           <td>ch08</td>
           <td>模型训练与部署篇</td>
-          <td>Pre-train：板载 MNIST 训练</td>
+          <td>板载训练：MNIST</td>
           <td>板载 CPU 训练 tiny CNN，准确率 80%–90%</td>
           <td>LeNet 风格小网；NumPy 训练循环；导出 fp32 <code>weights.bin</code></td>
           <td>板载完成训练并导出 fp32 权重 + golden 向量</td>
@@ -357,15 +357,15 @@
         <tr class="mod-ml">
           <td>ch09</td>
           <td>模型训练与部署篇</td>
-          <td>Post-train：量化与压缩</td>
-          <td>PTQ / 剪枝 / QAT / 蒸馏；对比体积与精度</td>
-          <td>per-tensor &amp; per-channel PTQ；剪枝再量化；导出 int8</td>
+          <td>量化与压缩</td>
+          <td>int8 量化、剪枝；对比体积与精度</td>
+          <td>fp32→int8 量化；剪枝再量化；导出 int8</td>
           <td>int8 <code>weights.h</code> + 精度–体积–延迟对比表</td>
         </tr>
         <tr class="mod-ml">
           <td>ch10</td>
           <td>模型训练与部署篇</td>
-          <td>Inference：板上部署与优化</td>
+          <td>板载推理：部署与优化</td>
           <td>自写 int8 算子推理；测 latency / RAM；GPIO 展示结果</td>
           <td>静态内存推理；profile；<code>infer &lt;idx&gt;</code> shell</td>
           <td>板载 int8 MNIST 推理闭环，UART 输出 digit + 置信度</td>
@@ -579,24 +579,20 @@
         <tr class="mod-ml">
           <td rowspan="8" class="merge">ch09</td>
           <td rowspan="8" class="merge">模型训练与部署篇</td>
-          <td class="section">9.1 浮点 vs int8：体积、带宽、延迟动机</td>
-          <td rowspan="8" class="merge section">PTQ / 剪枝 / QAT / 蒸馏；产出 int8 部署包</td>
-          <td rowspan="8" class="merge section">per-tensor PTQ；per-channel PTQ；剪枝；对比表</td>
+          <td class="section">9.1 浮点 vs int8：为何要做量化</td>
+          <td rowspan="8" class="merge section">int8 量化、剪枝；产出 int8 部署包</td>
+          <td rowspan="8" class="merge section">量化导出 int8；剪枝；精度–体积–延迟对比表</td>
           <td rowspan="8" class="merge section">int8 <code>weights.h</code> + 精度–体积–延迟表</td>
           <td rowspan="8" class="merge glossary section"><dl>
-            <dt>int8</dt><dd>8 位有符号整数（−128 到 127），量化后常用的权重存储格式。</dd>
-            <dt>PTQ</dt><dd>训练完成后，把 fp32 权重量化为 int8 的后训练量化。</dd>
+            <dt>int8 / 量化</dt><dd>把 fp32 权重转为 8 位整数存储与运算，模型更小、推理更快；含训练后量化与（选读）量化感知再训练。</dd>
             <dt>scale / zero-point</dt><dd>浮点数与 int8 互转时的比例系数；zero-point 是浮点 0 对应的整数值。</dd>
             <dt>剪枝</dt><dd>删除部分权重或通道，使模型体积变小、计算量减少。</dd>
-            <dt>QAT</dt><dd>在训练过程中模拟 int8 运算，提高量化后的精度。</dd>
-            <dt>蒸馏</dt><dd>用 fp32 模型的输出指导更小的 int8 模型学习。</dd>
-            <dt>per-tensor / per-channel</dt><dd>整张权重共用一个 scale；或每个输出通道各用一个 scale。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-ml"><td class="section">9.2 per-tensor PTQ：scale / zero-point 计算</td></tr>
-        <tr class="mod-ml"><td class="section">9.3 per-channel PTQ 与精度对比</td></tr>
+        <tr class="mod-ml"><td class="section">9.2 量化：scale / zero-point 计算</td></tr>
+        <tr class="mod-ml"><td class="section">9.3 量化：整层 scale 与按通道 scale 对比</td></tr>
         <tr class="mod-ml"><td class="section">9.4 结构化剪枝 + 再量化</td></tr>
-        <tr class="mod-ml"><td class="section">9.5 QAT 或知识蒸馏（二选一深入）</td></tr>
+        <tr class="mod-ml"><td class="section">9.5 选读：精度优化（再训练量化或蒸馏，二选一）</td></tr>
         <tr class="mod-ml"><td class="section">9.6 板载验证 int8 与 fp32 输出误差</td></tr>
         <tr class="mod-ml"><td class="section">9.7 导出 <code>weights.h</code>（int8 数组 + scale 表）</td></tr>
         <tr class="mod-ml"><td class="section">9.8 填写精度 / 模型体积 / 预估延迟对比表</td></tr>
