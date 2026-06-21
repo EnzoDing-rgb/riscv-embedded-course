@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Course Outline · RISC-V 嵌入式</title>
+  <title>Course Outline · RISC-V Linux 嵌入式实践</title>
   <style>
     :root {
       --border: #d4d4d4;
@@ -14,7 +14,8 @@
       --mod-env: #e3eef9;
       --mod-board: #fbeee0;
       --mod-linux: #ede8f5;
-      --mod-ml: #e2f0e4;
+      --mod-lab: #fff8e6;
+      --mod-cap: #e2f0e4;
     }
     * { box-sizing: border-box; }
     body {
@@ -41,7 +42,6 @@
       font-size: 0.95rem;
       margin-bottom: 16px;
     }
-    /* 课程主线 */
     .flow-wrap {
       background: #fff;
       border: 1px solid var(--border);
@@ -51,34 +51,35 @@
     }
     .flow {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(9, 1fr);
       gap: 8px;
     }
     .flow-step {
-      padding: 12px 10px;
+      padding: 12px 8px;
       border: 1px solid var(--border);
       border-radius: 6px;
-      min-height: 88px;
+      min-height: 92px;
     }
     .flow-step.mod-env { background: var(--mod-env); }
     .flow-step.mod-board { background: var(--mod-board); }
     .flow-step.mod-linux { background: var(--mod-linux); }
-    .flow-step.mod-ml { background: var(--mod-ml); }
+    .flow-step.mod-lab { background: var(--mod-lab); border-style: dashed; }
+    .flow-step.mod-cap { background: var(--mod-cap); }
     .flow-ch {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       color: #444;
       margin-bottom: 4px;
     }
     .flow-title {
       margin: 0 0 6px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
     }
     .flow-desc {
       margin: 0;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: #444;
       line-height: 1.45;
     }
@@ -106,8 +107,8 @@
     .legend i.mod-env { background: var(--mod-env); }
     .legend i.mod-board { background: var(--mod-board); }
     .legend i.mod-linux { background: var(--mod-linux); }
-    .legend i.mod-ml { background: var(--mod-ml); }
-    /* 表格 */
+    .legend i.mod-lab { background: var(--mod-lab); }
+    .legend i.mod-cap { background: var(--mod-cap); }
     .table-wrap {
       overflow-x: auto;
       background: #fff;
@@ -132,10 +133,12 @@
     tr.mod-env td { background: var(--mod-env); }
     tr.mod-board td { background: var(--mod-board); }
     tr.mod-linux td { background: var(--mod-linux); }
-    tr.mod-ml td { background: var(--mod-ml); }
+    tr.mod-lab td { background: var(--mod-lab); }
+    tr.mod-cap td { background: var(--mod-cap); }
     table.summary td { text-align: left; }
     table.bom td { text-align: left; background: #fff; }
     table.bom td.provider { text-align: center; white-space: nowrap; }
+    table.projects td { text-align: left; background: #fff; }
     table.detail { table-layout: fixed; }
     table.detail td.merge { text-align: center; }
     table.detail td.section { text-align: left; }
@@ -185,8 +188,8 @@
       font-size: 0.85rem;
       color: var(--muted);
     }
-    @media (max-width: 900px) {
-      .flow { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 1100px) {
+      .flow { grid-template-columns: repeat(4, 1fr); }
     }
     @media (max-width: 520px) {
       .flow { grid-template-columns: repeat(2, 1fr); }
@@ -196,51 +199,179 @@
 <body>
 <main>
   <h1>Course Outline</h1>
-  <p class="note">RISC-V Linux 开发板 · 10 章 · 主线：MNIST 0–9 数字识别 · 板载 CPU 训练与推理</p>
+  <p class="note">
+    <strong>Linux 嵌入式实践课</strong> · RISC-V 开发板 + RuyiSDK + <strong>C 语言</strong> ·
+    两个小项目 + 一个综合大项目 · 大项目含边缘推理（PC 训练 → 板载 C 推理）
+  </p>
 
   <div class="flow-wrap">
     <div class="flow">
       <div class="flow-step mod-env">
-        <span class="flow-ch">ch01–02</span>
-        <p class="flow-title">开发环境篇</p>
-        <p class="flow-desc">Ruyi、工具链、工程模板</p>
+        <span class="flow-ch">ch01</span>
+        <p class="flow-title">环境与开发板</p>
+        <p class="flow-desc">RuyiSDK、烧录、SSH/串口</p>
+      </div>
+      <div class="flow-step mod-env">
+        <span class="flow-ch">ch02</span>
+        <p class="flow-title">工具链与工程</p>
+        <p class="flow-desc">交叉编译、Makefile、首个 C 程序</p>
       </div>
       <div class="flow-step mod-board">
-        <span class="flow-ch">ch03–05</span>
-        <p class="flow-title">开发板基础篇</p>
-        <p class="flow-desc">GPIO、UART、外设与显示</p>
+        <span class="flow-ch">ch03</span>
+        <p class="flow-title">GPIO / UART / 外设</p>
+        <p class="flow-desc">LED、串口、温湿度、PWM</p>
+      </div>
+      <div class="flow-step mod-lab">
+        <span class="flow-ch">实验 1</span>
+        <p class="flow-title">温控风扇</p>
+        <p class="flow-desc">采集 → 阈值 → 风扇</p>
       </div>
       <div class="flow-step mod-linux">
-        <span class="flow-ch">ch06–07</span>
-        <p class="flow-title">Linux 应用篇</p>
-        <p class="flow-desc">日志、配置、多线程</p>
+        <span class="flow-ch">ch04</span>
+        <p class="flow-title">文件 / 配置 / 日志</p>
+        <p class="flow-desc">数据落盘、可配置启动</p>
       </div>
-      <div class="flow-step mod-ml">
-        <span class="flow-ch">ch08</span>
-        <p class="flow-title">板载训练</p>
-        <p class="flow-desc">CPU 训练 CNN，导出 fp32 权重</p>
+      <div class="flow-step mod-linux">
+        <span class="flow-ch">ch05</span>
+        <p class="flow-title">网络与 MQTT</p>
+        <p class="flow-desc">Broker、订阅发布、远程控设备</p>
       </div>
-      <div class="flow-step mod-ml">
-        <span class="flow-ch">ch09</span>
-        <p class="flow-title">量化压缩</p>
-        <p class="flow-desc">量化、剪枝，导出 int8 权重</p>
+      <div class="flow-step mod-lab">
+        <span class="flow-ch">实验 2</span>
+        <p class="flow-title">MQTT 远程控灯</p>
+        <p class="flow-desc">手机 → 网络 → LED</p>
       </div>
-      <div class="flow-step mod-ml">
-        <span class="flow-ch">ch10</span>
-        <p class="flow-title">板载推理</p>
-        <p class="flow-desc">int8 算子部署，输出识别结果</p>
+      <div class="flow-step mod-linux">
+        <span class="flow-ch">ch06</span>
+        <p class="flow-title">线程与协同</p>
+        <p class="flow-desc">采集 / MQTT / 控制解耦</p>
+      </div>
+      <div class="flow-step mod-cap">
+        <span class="flow-ch">综合项目</span>
+        <p class="flow-title">智能环境终端</p>
+        <p class="flow-desc">整合 + 时序异常检测推理</p>
       </div>
     </div>
   </div>
   <div class="legend">
     <span><i class="mod-env"></i>开发环境篇</span>
     <span><i class="mod-board"></i>开发板基础篇</span>
-    <span><i class="mod-linux"></i>Linux 应用开发篇</span>
-    <span><i class="mod-ml"></i>模型训练与部署篇</span>
+    <span><i class="mod-linux"></i>Linux 应用篇</span>
+    <span><i class="mod-lab"></i>阶段实验</span>
+    <span><i class="mod-cap"></i>综合大项目</span>
+  </div>
+
+  <h2>术语表</h2>
+  <p class="note">读「三项目递进」前可先扫一眼；各章小节表内仍有章节专属名词。</p>
+  <div class="table-wrap">
+    <table class="bom">
+      <thead>
+        <tr>
+          <th style="width:16%">术语</th>
+          <th style="width:84%">是什么（人话）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MQTT</td>
+          <td>物联网用的<strong>发消息协议</strong>。手机、开发板不直连，都连一个「中转站」，按<strong>主题名</strong>收发文字命令（如 <code>home/led</code> 发 <code>on</code>）。</td>
+        </tr>
+        <tr>
+          <td>Broker</td>
+          <td>MQTT 的<strong>中转站</strong>。谁发布、谁订阅，都由它转发。实验常用 <strong>Mosquitto</strong> 软件在 PC 或板子上跑。</td>
+        </tr>
+        <tr>
+          <td>发布 / 订阅</td>
+          <td><strong>发布</strong> = 往某主题发一条消息；<strong>订阅</strong> = 盯着某主题，有新消息就收到。实验 2：手机发布、板子订阅。</td>
+        </tr>
+        <tr>
+          <td>主题（topic）</td>
+          <td>消息频道名，像微信群名。例：<code>home/led</code> 控灯，<code>sensor/alert</code> 报告警。</td>
+        </tr>
+        <tr>
+          <td>RuyiSDK / ruyi</td>
+          <td>本课统一的 RISC-V 开发工具入口：装交叉编译器、系统镜像、查板卡支持列表。</td>
+        </tr>
+        <tr>
+          <td>交叉编译</td>
+          <td>在 PC 上编译出<strong>只能在开发板上跑</strong>的程序，再 SSH/SCP 拷过去运行。</td>
+        </tr>
+        <tr>
+          <td>GPIO</td>
+          <td>板子引脚，软件可读（按键、传感器）或可写（LED、继电器）。</td>
+        </tr>
+        <tr>
+          <td>DHT22</td>
+          <td>温湿度传感器。板子定时读它，得到当前温度、湿度数字。</td>
+        </tr>
+        <tr>
+          <td>PWM</td>
+          <td>用快速开关调节<strong>平均电压</strong>，用来控风扇转速或 LED 亮度。</td>
+        </tr>
+        <tr>
+          <td>阈值控制</td>
+          <td>实验 1 的逻辑：温度高于某值开风扇，低于某值关。规则写死在程序或配置文件里。</td>
+        </tr>
+        <tr>
+          <td>pthread / 多线程</td>
+          <td>一个程序里同时跑多段逻辑（如一线程读温度、一线程处理 MQTT），互不卡死。</td>
+        </tr>
+        <tr>
+          <td>时序异常检测</td>
+          <td>不看单次温度，看<strong>最近一串读数</strong>（滑动窗口）像不像「正常环境」。不像 → 判异常。综合项目的 AI 部分就是这个。</td>
+        </tr>
+        <tr>
+          <td>PC 训练 / 板推理</td>
+          <td>在电脑上用小脚本训一个很小的模型，导出 <code>weights.h</code>；开发板 C 程序只负责<strong>算结果、控风扇灯</strong>，不在板上训模型。</td>
+        </tr>
+        <tr>
+          <td><code>weights.h</code></td>
+          <td>模型权重的 C 头文件，编译进板子程序，推理时直接读这些数字做乘法相加。</td>
+        </tr>
+        <tr>
+          <td>智能环境终端</td>
+          <td>本课<strong>综合大项目</strong>名字：一块板子同时管测温、控风扇、MQTT 控灯/上报，并用小模型判断环境是否异常。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>三项目递进</h2>
+  <div class="table-wrap">
+    <table class="projects">
+      <thead>
+        <tr>
+          <th style="width:10%">阶段</th>
+          <th style="width:22%">项目</th>
+          <th style="width:38%">闭环</th>
+          <th style="width:30%">串起的知识点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>实验 1</td>
+          <td>温度传感器 + 风扇</td>
+          <td>本地自动化：读温度 → 判断阈值 → 控制风扇转速/开关</td>
+          <td>RuyiSDK 环境、C 编译部署、GPIO/外设读取、条件控制</td>
+        </tr>
+        <tr>
+          <td>实验 2</td>
+          <td>LED + Mosquitto + 手机 MQTT App</td>
+          <td>远程控制：手机发消息 → Broker → 开发板 → LED 亮灭</td>
+          <td>TCP/IP、MQTT 订阅发布、GPIO 输出、与实验 1 独立可演示</td>
+        </tr>
+        <tr>
+          <td>综合项目</td>
+          <td>智能环境终端（含时序异常检测）</td>
+          <td>整合温控 + 远程控灯 + 日志配置 + 多线程；模型判「环境异常」→ 风扇/LED/MQTT 联动</td>
+          <td>ch01–ch06 全部模块；PC 轻量训练小模型；板载 C 推理；可选规则/模型双模式</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <h2>物料清单</h2>
-  <p class="note">自备电脑 SSH 连板；不需 HDMI 大显示器。ch05 用小型 OLED 模块，不是电脑外接屏。</p>
+  <p class="note">自备电脑 SSH 连板；不需 HDMI 大显示器。MQTT Broker 可跑在 PC 或开发板（实验 2 起）。</p>
   <div class="table-wrap">
     <table class="bom">
       <thead>
@@ -253,22 +384,47 @@
       <tbody>
         <tr>
           <td>个人电脑</td>
-          <td>可联网；安装 <code>ruyi</code>，SSH/串口连开发板</td>
+          <td>联网；安装 <code>ruyi</code>、交叉工具链；SSH/串口连板；实验 2 起安装 Mosquitto 或 MQTT 客户端；综合项目 PC 端跑训练脚本（Python）</td>
+          <td class="provider">学生自备</td>
+        </tr>
+        <tr>
+          <td>智能手机</td>
+          <td>安装 MQTT 调试 App（如 MQTTX），实验 2 远程控灯</td>
           <td class="provider">学生自备</td>
         </tr>
         <tr>
           <td>RISC-V Linux 开发板</td>
-          <td>可运行 Linux，兼容 RuyiSDK（如 LicheePi 4A、Milk-V Meles，见 <a href="https://github.com/ruyisdk/support-matrix">support-matrix</a>）；含电源、网线；板载 LED 与按键</td>
+          <td>可运行 Linux，兼容 RuyiSDK（如 LicheePi 4A，见 <a href="https://github.com/ruyisdk/support-matrix">support-matrix</a>）；含电源、网线；板载 LED 与按键</td>
           <td class="provider">课程提供</td>
         </tr>
         <tr>
           <td>USB 转串口线</td>
-          <td>ch04 串口调试</td>
+          <td>串口登录与调试</td>
           <td class="provider">课程提供</td>
         </tr>
         <tr>
-          <td>OLED 小屏模块</td>
-          <td>0.96 寸 I2C 或 SPI OLED + 杜邦线；ch05 显示样本图案</td>
+          <td>面包板 + 杜邦线</td>
+          <td>外设接线</td>
+          <td class="provider">课程提供</td>
+        </tr>
+        <tr>
+          <td>温湿度传感器（DHT22 等）</td>
+          <td>实验 1、综合项目环境采集</td>
+          <td class="provider">课程提供</td>
+        </tr>
+        <tr>
+          <td>风扇 + 驱动（继电器或 MOSFET 模块）</td>
+          <td>实验 1 阈值控风；综合项目联动</td>
+          <td class="provider">课程提供</td>
+        </tr>
+        <tr>
+          <td>外接 LED 模块</td>
+          <td>实验 2 MQTT 控灯；综合项目状态指示</td>
+          <td class="provider">课程提供</td>
+        </tr>
+        <tr>
+          <td>OLED 小屏（可选）</td>
+          <td>ch03 显示温湿度；综合项目本地状态（非必需）</td>
           <td class="provider">课程提供</td>
         </tr>
       </tbody>
@@ -276,106 +432,98 @@
   </div>
 
   <h2>章节总览</h2>
-  <p class="note">每章一行：二级章节 + 目标 / 实验 / 成果。</p>
+  <p class="note">每章一行：目标、实验、成果。阶段实验与综合项目单独列出。</p>
   <div class="table-wrap">
     <table class="summary">
       <thead>
         <tr>
-          <th style="width:6%">章</th>
-          <th style="width:12%">一级模块</th>
-          <th style="width:18%">二级章节</th>
-          <th style="width:28%">本章目标</th>
-          <th style="width:18%">配套实验</th>
-          <th style="width:18%">章节成果</th>
+          <th style="width:7%">章/项</th>
+          <th style="width:11%">模块</th>
+          <th style="width:17%">名称</th>
+          <th style="width:26%">本章目标</th>
+          <th style="width:20%">配套实验</th>
+          <th style="width:19%">章节成果</th>
         </tr>
       </thead>
       <tbody>
         <tr class="mod-env">
           <td>ch01</td>
           <td>开发环境篇</td>
-          <td>RuyiSDK、开发板与 QEMU 上手</td>
-          <td>建立统一开发环境和最小运行闭环</td>
-          <td>安装 <code>ruyi</code>；启动 QEMU 或板卡；远程登录系统</td>
-          <td>完成统一环境配置并能进入系统</td>
+          <td>RISC-V 生态与开发环境搭建</td>
+          <td>建立 RuyiSDK 统一环境与板卡最小运行闭环</td>
+          <td>安装 <code>ruyi</code>；镜像/板卡启动；SSH、SCP、串口登录</td>
+          <td>能进入目标系统并完成远程开发</td>
         </tr>
         <tr class="mod-env">
           <td>ch02</td>
           <td>开发环境篇</td>
           <td>工具链、工程模板与第一个程序</td>
-          <td>说明程序如何编译、链接、运行</td>
-          <td>Hello World；ELF 观察；基准测试对比</td>
-          <td>形成「能编译、能运行、能解释二进制」的最小工程能力</td>
+          <td>掌握交叉编译与工程构建全流程</td>
+          <td>Hello World；<code>readelf</code>/<code>ldd</code>；Makefile 模板</td>
+          <td>能编译、部署、解释 ELF 的最小 C 工程</td>
         </tr>
         <tr class="mod-board">
           <td>ch03</td>
           <td>开发板基础篇</td>
-          <td>GPIO 输入输出与交互</td>
-          <td>形成最早的板卡控制能力</td>
-          <td>Blink；Button；按键控制 LED</td>
-          <td>完成第一个真实板级交互程序</td>
+          <td>GPIO、UART 与常用外设控制</td>
+          <td>形成「读传感器—算结果—控执行器」的板级能力</td>
+          <td>Blink/按键；UART Echo；DHT22 读取；PWM 驱动风扇/LED</td>
+          <td>可复用的外设驱动与串口调试框架</td>
         </tr>
-        <tr class="mod-board">
+        <tr class="mod-lab">
+          <td>实验 1</td>
+          <td>阶段实验</td>
+          <td>温度传感器 + 风扇</td>
+          <td>完成第一个本地嵌入式控制闭环</td>
+          <td>读温度 → 与阈值比较 → 控制风扇；串口打印状态</td>
+          <td>可演示的温控风扇程序（C）</td>
+        </tr>
+        <tr class="mod-linux">
           <td>ch04</td>
-          <td>开发板基础篇</td>
-          <td>串口通信与板级调试</td>
-          <td>建立板卡调试与交互通道</td>
-          <td>UART Echo；串口命令回显</td>
-          <td>获得可复用的串口调试工具</td>
+          <td>Linux 应用篇</td>
+          <td>文件、配置与日志</td>
+          <td>程序可配置、可落盘、可排错</td>
+          <td>传感数据写文件；INI/键值配置；分级日志</td>
+          <td>从「示例」升级为可维护应用结构</td>
         </tr>
-        <tr class="mod-board">
+        <tr class="mod-linux">
           <td>ch05</td>
-          <td>开发板基础篇</td>
-          <td>常用外设与人机交互</td>
-          <td>完成「采集—显示」局部闭环</td>
-          <td>呼吸灯；OLED 显示 MNIST 样本图案</td>
-          <td>形成可工作的本地显示终端</td>
+          <td>Linux 应用篇</td>
+          <td>网络通信与 MQTT 消息控制</td>
+          <td>理解物联网消息模型，实现订阅与发布</td>
+          <td>连接 Broker；订阅控制主题；解析 payload 驱动 GPIO</td>
+          <td>可复用的 MQTT 客户端模块（C）</td>
+        </tr>
+        <tr class="mod-lab">
+          <td>实验 2</td>
+          <td>阶段实验</td>
+          <td>MQTT 远程控灯</td>
+          <td>完成「手机 → 网络 → 板子 → LED」远程闭环</td>
+          <td>Mosquitto + 手机 App 发 <code>on</code>/<code>off</code>；板端订阅并控灯</td>
+          <td>可演示的远程控灯（C + MQTT）</td>
         </tr>
         <tr class="mod-linux">
           <td>ch06</td>
-          <td>Linux 应用开发篇</td>
-          <td>文件、配置与日志</td>
-          <td>使程序具备持久化与可维护性</td>
-          <td>MNIST 数据落盘；配置化启动；日志记录</td>
-          <td>程序从「示例」升级为「可维护应用」</td>
-        </tr>
-        <tr class="mod-linux">
-          <td>ch07</td>
-          <td>Linux 应用开发篇</td>
+          <td>Linux 应用篇</td>
           <td>线程与任务协同</td>
-          <td>让程序具备稳定运行能力</td>
-          <td>双线程采样与显示；线程同步调试</td>
-          <td>形成可持续运行的多线程程序</td>
+          <td>多任务稳定并发：采集、通信、控制解耦</td>
+          <td>采集线程 + 控制线程；互斥锁保护共享状态；队列传递数据</td>
+          <td>可长期运行的多线程程序骨架（供综合项目复用）</td>
         </tr>
-        <tr class="mod-ml">
-          <td>ch08</td>
-          <td>模型训练与部署篇</td>
-          <td>板载训练：MNIST</td>
-          <td>板载 CPU 训练 tiny CNN，准确率 80%–90%</td>
-          <td>LeNet 风格小网；NumPy 训练循环；导出 fp32 <code>weights.bin</code></td>
-          <td>板载完成训练并导出 fp32 权重 + golden 向量</td>
-        </tr>
-        <tr class="mod-ml">
-          <td>ch09</td>
-          <td>模型训练与部署篇</td>
-          <td>量化与压缩</td>
-          <td>int8 量化、剪枝；对比体积与精度</td>
-          <td>fp32→int8 量化；剪枝再量化；导出 int8</td>
-          <td>int8 <code>weights.h</code> + 精度–体积–延迟对比表</td>
-        </tr>
-        <tr class="mod-ml">
-          <td>ch10</td>
-          <td>模型训练与部署篇</td>
-          <td>板载推理：部署与优化</td>
-          <td>自写 int8 算子推理；测 latency / RAM；GPIO 展示结果</td>
-          <td>静态内存推理；profile；<code>infer &lt;idx&gt;</code> shell</td>
-          <td>板载 int8 MNIST 推理闭环，UART 输出 digit + 置信度</td>
+        <tr class="mod-cap">
+          <td>综合</td>
+          <td>综合大项目</td>
+          <td>智能环境终端</td>
+          <td>整合实验 1/2 + ch04–ch06；加入时序异常检测（PC 训、板推理）</td>
+          <td>模块组装；<code>weights.h</code> 部署；异常演示（加热/捂板）；MQTT 上报</td>
+          <td>可答辩的完整 Linux 嵌入式 + 边缘推理作品</td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <h2>章节小节</h2>
-  <p class="note">展开每章具体小节；最右栏解释本章出现的专有名词，无则填「无」。</p>
+  <p class="note">展开每章具体小节；最右栏为本章专有名词，无则填「无」。</p>
   <div class="table-wrap">
     <table class="detail">
       <colgroup>
@@ -390,7 +538,7 @@
       <thead>
         <tr>
           <th>章节</th>
-          <th>一级模块</th>
+          <th>模块</th>
           <th>章节目录</th>
           <th>本章目标</th>
           <th>配套实验</th>
@@ -401,251 +549,217 @@
       <tbody>
         <!-- ch01 -->
         <tr class="mod-env">
-          <td rowspan="6" class="merge">ch01</td>
-          <td rowspan="6" class="merge">开发环境篇</td>
-          <td class="section">1.1 查询 RuyiSDK 支持状态与目标环境</td>
-          <td rowspan="6" class="merge section">建立统一开发环境和最小运行闭环</td>
-          <td rowspan="6" class="merge section">安装 <code>ruyi</code>；启动 QEMU 或板卡；SSH/串口登录；检查 Python/NumPy</td>
-          <td rowspan="6" class="merge section">完成统一环境配置并能进入系统</td>
-          <td rowspan="6" class="merge glossary section"><dl>
-            <dt>RuyiSDK</dt><dd>软件所维护的 RISC-V 开发工具集，含包管理器、交叉工具链和板卡镜像。</dd>
-            <dt>ruyi</dt><dd>命令行工具，用来安装编译器和 sysroot、下载板卡系统镜像。</dd>
-            <dt>QEMU</dt><dd>在 PC 上模拟 RISC-V CPU 和外围设备，运行与板卡相同的 Linux 程序。</dd>
-            <dt>virt</dt><dd>QEMU 内置的一种通用 RISC-V 虚拟机型号，无实体板时用来练习。</dd>
-            <dt>SSH / SCP</dt><dd>经网络远程登录开发板、拷贝文件的协议与命令。</dd>
-            <dt>串口</dt><dd>用 USB 转串口线连接开发板，以文本方式登录和收发调试信息。</dd>
-            <dt>NumPy</dt><dd>Python 数值计算库，用多维数组做矩阵运算，后续训练会用到。</dd>
+          <td rowspan="5" class="merge">ch01</td>
+          <td rowspan="5" class="merge">开发环境篇</td>
+          <td class="section">1.1 RISC-V 生态与课程目标平台（LicheePi 4A 等）</td>
+          <td rowspan="5" class="merge section">建立 RuyiSDK 统一环境与最小运行闭环</td>
+          <td rowspan="5" class="merge section">安装 <code>ruyi</code>；板卡或 QEMU 启动；SSH/串口登录</td>
+          <td rowspan="5" class="merge section">完成环境配置并能进入系统</td>
+          <td rowspan="5" class="merge glossary section"><dl>
+            <dt>RuyiSDK</dt><dd>RISC-V 开发工具集：包管理、交叉工具链、板卡镜像。</dd>
+            <dt>ruyi</dt><dd>命令行工具，安装编译器、sysroot、下载系统镜像。</dd>
+            <dt>SSH / SCP</dt><dd>经网络远程登录开发板、拷贝文件。</dd>
+            <dt>串口</dt><dd>USB 转串口连接板子，文本方式登录与调试。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-env"><td class="section">1.2 安装 <code>ruyi</code> 并完成环境检查</td></tr>
-        <tr class="mod-env"><td class="section">1.3 启动 QEMU <code>virt</code> 或连接开发板</td></tr>
+        <tr class="mod-env"><td class="section">1.2 安装 <code>ruyi</code> 并检查工具链</td></tr>
+        <tr class="mod-env"><td class="section">1.3 镜像烧录与首次启动（网络、用户、apt 源）</td></tr>
         <tr class="mod-env"><td class="section">1.4 SSH/SCP/串口登录与文件传输</td></tr>
-        <tr class="mod-env"><td class="section">1.5 <code>ruyi device provision</code> 使用边界</td></tr>
-        <tr class="mod-env"><td class="section">1.6 验证板载 <code>python3</code> + NumPy<span class="tag">ML</span></td></tr>
+        <tr class="mod-env"><td class="section">1.5 <code>ruyi device provision</code> 适用边界</td></tr>
 
         <!-- ch02 -->
         <tr class="mod-env">
           <td rowspan="6" class="merge">ch02</td>
           <td rowspan="6" class="merge">开发环境篇</td>
-          <td class="section">2.1 区分 host、target 与 sysroot</td>
-          <td rowspan="6" class="merge section">说明程序如何编译、链接、运行</td>
-          <td rowspan="6" class="merge section">Hello World；ELF 观察；基准测试对比</td>
-          <td rowspan="6" class="merge section">形成「能编译、能运行、能解释二进制」的最小工程能力</td>
+          <td class="section">2.1 host、target、sysroot 概念</td>
+          <td rowspan="6" class="merge section">掌握交叉编译与工程构建</td>
+          <td rowspan="6" class="merge section">Hello World；ELF 观察；Makefile 工程模板</td>
+          <td rowspan="6" class="merge section">最小可部署 C 工程</td>
           <td rowspan="6" class="merge glossary section"><dl>
-            <dt>host</dt><dd>你写代码、运行编译器的 PC。</dd>
-            <dt>target</dt><dd>程序最终运行的 RISC-V 开发板或 QEMU 仿真环境。</dd>
-            <dt>sysroot</dt><dd>target 系统的头文件和库所在目录，交叉编译链接时使用。</dd>
-            <dt>ELF</dt><dd>Linux 上可执行文件和共享库常用的二进制文件格式。</dd>
-            <dt>readelf / ldd</dt><dd>分别用于查看 ELF 段信息和程序依赖的动态库。</dd>
-            <dt>Makefile</dt><dd>用规则描述源文件如何编译、链接成可执行文件的脚本。</dd>
-            <dt>CoreMark / Dhrystone</dt><dd>两种常用的 CPU 性能测试小程序，用来对比算力。</dd>
-            <dt>.rodata / .bin</dt><dd>ELF 中存放只读常量的段；按字节存储的原始二进制文件（如权重）。</dd>
+            <dt>交叉编译</dt><dd>在 PC（host）上生成在开发板（target）上运行的程序。</dd>
+            <dt>ELF</dt><dd>Linux 可执行文件常用二进制格式。</dd>
+            <dt>Makefile</dt><dd>描述源文件如何编译、链接的规则文件。</dd>
+            <dt>readelf / ldd</dt><dd>查看 ELF 段信息；查看动态库依赖。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-env"><td class="section">2.2 编译 Hello World 并使用 <code>readelf</code>、<code>ldd</code> 观察</td></tr>
-        <tr class="mod-env"><td class="section">2.3 解释 ELF 关键字段与动态依赖</td></tr>
-        <tr class="mod-env"><td class="section">2.4 编写 Makefile 与统一工程目录</td></tr>
-        <tr class="mod-env"><td class="section">2.5 运行 CoreMark/Dhrystone 并说明结果边界</td></tr>
-        <tr class="mod-env"><td class="section">2.6 观察 <code>.rodata</code> 段体积（含权重文件存放位置）<span class="tag">ML</span></td></tr>
+        <tr class="mod-env"><td class="section">2.2 第一个 C 程序：编译 → 传输 → 运行</td></tr>
+        <tr class="mod-env"><td class="section">2.3 <code>readelf</code>、<code>ldd</code> 观察二进制</td></tr>
+        <tr class="mod-env"><td class="section">2.4 Makefile：规则、变量、<code>clean</code></td></tr>
+        <tr class="mod-env"><td class="section">2.5 统一工程目录（<code>src</code>/<code>include</code>/<code>build</code>）</td></tr>
+        <tr class="mod-env"><td class="section">2.6 选读：CoreMark 对比算力边界</td></tr>
 
         <!-- ch03 -->
         <tr class="mod-board">
-          <td rowspan="5" class="merge">ch03</td>
-          <td rowspan="5" class="merge">开发板基础篇</td>
-          <td class="section">3.1 使用 GPIO 输出控制 LED</td>
-          <td rowspan="5" class="merge section">形成最早的板卡控制能力</td>
-          <td rowspan="5" class="merge section">Blink；Button；按键控制 LED</td>
-          <td rowspan="5" class="merge section">完成第一个真实板级交互程序</td>
-          <td rowspan="5" class="merge glossary section"><dl>
-            <dt>GPIO</dt><dd>芯片上可由软件设为输入或输出的引脚，用来读按键电平、控制 LED 亮灭。</dd>
-            <dt>轮询</dt><dd>程序循环读取引脚状态，判断按键是否按下。</dd>
-            <dt>消抖</dt><dd>按键机械触点抖动会产生多次短脉冲，用延时或计数过滤误触发。</dd>
-            <dt>状态机</dt><dd>程序按几种固定状态和切换条件组织行为，例如切换 LED 显示模式。</dd>
+          <td rowspan="8" class="merge">ch03</td>
+          <td rowspan="8" class="merge">开发板基础篇</td>
+          <td class="section">3.1 GPIO 输出：LED 闪烁</td>
+          <td rowspan="8" class="merge section">板级读—算—控能力</td>
+          <td rowspan="8" class="merge section">Blink；UART Echo；DHT22；PWM 风扇</td>
+          <td rowspan="8" class="merge section">外设驱动 + 串口框架</td>
+          <td rowspan="8" class="merge glossary section"><dl>
+            <dt>GPIO</dt><dd>可由软件设为输入/输出的芯片引脚。</dd>
+            <dt>UART</dt><dd>按波特率逐字节收发的硬件串口。</dd>
+            <dt>DHT22</dt><dd>单总线温湿度传感器，需严格时序读取。</dd>
+            <dt>PWM</dt><dd>改变方波占空比调节风扇/LED 平均功率。</dd>
+            <dt>gpiod</dt><dd>Linux 上通过字符设备控制 GPIO 的库（推荐于 sysfs）。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-board"><td class="section">3.2 使用 GPIO 输入读取按键</td></tr>
-        <tr class="mod-board"><td class="section">3.3 使用轮询与消抖稳定按键输入</td></tr>
-        <tr class="mod-board"><td class="section">3.4 使用状态机实现按键控制 LED 模式</td></tr>
-        <tr class="mod-board"><td class="section">3.5 选读：GPIO 输出与后续识别结果展示<span class="tag">ML</span></td></tr>
+        <tr class="mod-board"><td class="section">3.2 GPIO 输入：按键与消抖</td></tr>
+        <tr class="mod-board"><td class="section">3.3 UART 配置、收发与 Echo</td></tr>
+        <tr class="mod-board"><td class="section">3.4 串口输出调试日志</td></tr>
+        <tr class="mod-board"><td class="section">3.5 读取 DHT22 温湿度</td></tr>
+        <tr class="mod-board"><td class="section">3.6 PWM 控制风扇或 LED 亮度</td></tr>
+        <tr class="mod-board"><td class="section">3.7 选读：OLED 显示实时温湿度</td></tr>
+        <tr class="mod-board"><td class="section">3.8 状态机组织「采集—判断—输出」逻辑</td></tr>
+
+        <!-- lab1 -->
+        <tr class="mod-lab">
+          <td rowspan="4" class="merge">实验1</td>
+          <td rowspan="4" class="merge">阶段实验</td>
+          <td class="section">L1.1 接线：温湿度传感器 + 风扇驱动</td>
+          <td rowspan="4" class="merge section">本地自动化闭环</td>
+          <td rowspan="4" class="merge section">阈值可配置；串口打印温度与风扇状态</td>
+          <td rowspan="4" class="merge section">温控风扇可演示</td>
+          <td rowspan="4" class="merge glossary section"><dl>
+            <dt>阈值控制</dt><dd>温度高于上限开风扇，低于下限关风扇；可加滞回避免抖动。</dd>
+            <dt>继电器 / MOSFET</dt><dd>用低压 GPIO 控制风扇等大电流负载的开关模块。</dd>
+          </dl></td>
+        </tr>
+        <tr class="mod-lab"><td class="section">L1.2 周期性采样与环境温度读取</td></tr>
+        <tr class="mod-lab"><td class="section">L1.3 阈值判断与风扇 PWM/开关控制</td></tr>
+        <tr class="mod-lab"><td class="section">L1.4 串口打印与简单异常（传感器读失败）</td></tr>
 
         <!-- ch04 -->
-        <tr class="mod-board">
-          <td rowspan="6" class="merge">ch04</td>
-          <td rowspan="6" class="merge">开发板基础篇</td>
-          <td class="section">4.1 配置 UART 通信参数</td>
-          <td rowspan="6" class="merge section">建立板卡调试与交互通道</td>
-          <td rowspan="6" class="merge section">UART Echo；串口命令回显</td>
-          <td rowspan="6" class="merge section">获得可复用的串口调试工具</td>
-          <td rowspan="6" class="merge glossary section"><dl>
-            <dt>UART</dt><dd>按固定位速率逐字节收发数据的硬件串口。</dd>
-            <dt>TTY</dt><dd>Linux 中表示终端设备的文件节点，串口登录后对应一个 TTY。</dd>
-            <dt>Echo</dt><dd>把收到的字符原样发回，用于确认串口收发是否正常。</dd>
+        <tr class="mod-linux">
+          <td rowspan="5" class="merge">ch04</td>
+          <td rowspan="5" class="merge">Linux 应用篇</td>
+          <td class="section">4.1 文件 I/O：保存传感历史</td>
+          <td rowspan="5" class="merge section">可配置、可落盘、可排错</td>
+          <td rowspan="5" class="merge section">数据落盘；配置文件；日志模块</td>
+          <td rowspan="5" class="merge section">可维护应用目录结构</td>
+          <td rowspan="5" class="merge glossary section"><dl>
+            <dt>配置文件</dt><dd>键值或 INI 形式，改阈值/MQTT 地址无需重编译。</dd>
+            <dt>日志</dt><dd>带时间戳的运行记录，便于现场排错。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-board"><td class="section">4.2 使用 TTY 与串口工具连接开发板</td></tr>
-        <tr class="mod-board"><td class="section">4.3 编写串口收发与 Echo 程序</td></tr>
-        <tr class="mod-board"><td class="section">4.4 通过串口输出调试日志（实时，不落盘）</td></tr>
-        <tr class="mod-board"><td class="section">4.5 实现串口命令回显工具</td></tr>
-        <tr class="mod-board"><td class="section">4.6 选读：串口命令框架（为后续 <code>infer</code> 预留）<span class="tag">ML</span></td></tr>
+        <tr class="mod-linux"><td class="section">4.2 读取配置文件（阈值、采样周期）</td></tr>
+        <tr class="mod-linux"><td class="section">4.3 分级日志：控制台 + 文件</td></tr>
+        <tr class="mod-linux"><td class="section">4.4 错误处理与可诊断退出码</td></tr>
+        <tr class="mod-linux"><td class="section">4.5 应用程序目录布局（配置/数据/日志分离）</td></tr>
 
         <!-- ch05 -->
-        <tr class="mod-board">
+        <tr class="mod-linux">
           <td rowspan="6" class="merge">ch05</td>
-          <td rowspan="6" class="merge">开发板基础篇</td>
-          <td class="section">5.1 使用 PWM 控制 LED 亮度</td>
-          <td rowspan="6" class="merge section">完成「采集—显示」局部闭环</td>
-          <td rowspan="6" class="merge section">呼吸灯；OLED 显示 MNIST 样本图案</td>
-          <td rowspan="6" class="merge section">形成可工作的本地显示终端</td>
+          <td rowspan="6" class="merge">Linux 应用篇</td>
+          <td class="section">5.1 TCP/IP 与开发板联网基础</td>
+          <td rowspan="6" class="merge section">实现 MQTT 订阅发布控外设</td>
+          <td rowspan="6" class="merge section">连接 Broker；订阅 <code>home/led</code>；解析 JSON/文本 payload</td>
+          <td rowspan="6" class="merge section">可复用 MQTT 客户端模块</td>
           <td rowspan="6" class="merge glossary section"><dl>
-            <dt>PWM</dt><dd>通过改变方波占空比调节 LED 平均亮度；呼吸灯即占空比周期性变化。</dd>
-            <dt>灰度图</dt><dd>每个像素用一个 0–255 的字节表示亮度，不含颜色信息。</dd>
-            <dt>MNIST</dt><dd>手写数字 0–9 的公开图像数据集，每张 28×28 灰度像素。</dd>
-            <dt>I2C / SPI</dt><dd>两种短距离总线协议，用来连接 OLED 等外设芯片。</dd>
-            <dt>OLED</dt><dd>可显示文字或点阵图案的小型屏幕。</dd>
-            <dt>buffer</dt><dd>程序里一块连续内存，暂存待显示的图像字节。</dd>
+            <dt>MQTT</dt><dd>轻量发布/订阅消息协议；设备与手机通过 Broker 间接通信，无需直连。</dd>
+            <dt>Broker</dt><dd>消息中转（如 Mosquitto）；发布者发主题，订阅者收主题。</dd>
+            <dt>主题（topic）</dt><dd>消息频道名，如 <code>home/led</code>、<code>sensor/alert</code>。</dd>
+            <dt>payload</dt><dd>消息正文，如 <code>on</code>、<code>off</code> 或 JSON 状态。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-board"><td class="section">5.2 理解灰度图像素布局（28×28 = 784 字节）<span class="tag">ML</span></td></tr>
-        <tr class="mod-board"><td class="section">5.3 通过 I2C/SPI 连接和识别外设</td></tr>
-        <tr class="mod-board"><td class="section">5.4 使用 OLED 显示样本图案（内置静态数组）</td></tr>
-        <tr class="mod-board"><td class="section">5.5 串口命令控制 PWM / GPIO 输出<span class="tag">ML</span></td></tr>
-        <tr class="mod-board"><td class="section">5.6 实现本地显示闭环</td></tr>
+        <tr class="mod-linux"><td class="section">5.2 Mosquitto 安装与 <code>mosquitto_pub/sub</code> 测试</td></tr>
+        <tr class="mod-linux"><td class="section">5.3 C 客户端库（如 libmosquitto）连接与回调</td></tr>
+        <tr class="mod-linux"><td class="section">5.4 订阅控制主题并解析命令</td></tr>
+        <tr class="mod-linux"><td class="section">5.5 发布状态主题（温度、LED 状态）</td></tr>
+        <tr class="mod-linux"><td class="section">5.6 选读：TLS / 用户名密码（生产环境）</td></tr>
+
+        <!-- lab2 -->
+        <tr class="mod-lab">
+          <td rowspan="4" class="merge">实验2</td>
+          <td rowspan="4" class="merge">阶段实验</td>
+          <td class="section">L2.1 Broker 与手机 MQTT App 联调</td>
+          <td rowspan="4" class="merge section">远程控制闭环</td>
+          <td rowspan="4" class="merge section">手机发 <code>on</code>/<code>off</code>；板端 LED 响应；状态回传</td>
+          <td rowspan="4" class="merge section">MQTT 控灯可演示</td>
+          <td rowspan="4" class="merge glossary section">无</td>
+        </tr>
+        <tr class="mod-lab"><td class="section">L2.2 板端订阅 LED 控制主题</td></tr>
+        <tr class="mod-lab"><td class="section">L2.3 GPIO 驱动 LED；发布当前状态</td></tr>
+        <tr class="mod-lab"><td class="section">L2.4 与实验 1 代码目录对齐（为综合项目做准备）</td></tr>
 
         <!-- ch06 -->
         <tr class="mod-linux">
-          <td rowspan="6" class="merge">ch06</td>
-          <td rowspan="6" class="merge">Linux 应用开发篇</td>
-          <td class="section">6.1 使用文件 I/O 保存运行数据</td>
-          <td rowspan="6" class="merge section">使程序具备持久化与可维护性</td>
-          <td rowspan="6" class="merge section">MNIST 数据落盘；配置化启动；日志记录</td>
-          <td rowspan="6" class="merge section">程序从「示例」升级为「可维护应用」</td>
-          <td rowspan="6" class="merge glossary section"><dl>
-            <dt>IDX</dt><dd>MNIST 官方二进制文件格式，用来存放图像和标签。</dd>
-            <dt>文件 I/O</dt><dd>用 open/read/write 等系统调用读写磁盘文件。</dd>
+          <td rowspan="5" class="merge">ch06</td>
+          <td rowspan="5" class="merge">Linux 应用篇</td>
+          <td class="section">6.1 pthread 创建与管理</td>
+          <td rowspan="5" class="merge section">多任务稳定并发</td>
+          <td rowspan="5" class="merge section">采集线程 + MQTT 线程 + 控制线程；互斥锁；环形队列</td>
+          <td rowspan="5" class="merge section">多线程程序骨架</td>
+          <td rowspan="5" class="merge glossary section"><dl>
+            <dt>pthread</dt><dd>POSIX 线程，Linux 上多任务并发。</dd>
+            <dt>互斥锁</dt><dd>保护共享状态（当前温度、LED、风扇档位）。</dd>
+            <dt>生产者–消费者</dt><dd>采集线程入队，控制/推理线程出队处理。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-linux"><td class="section">6.2 读取 MNIST IDX 并加载样本到 buffer（Python）<span class="tag">ML</span></td></tr>
-        <tr class="mod-linux"><td class="section">6.3 编写配置文件读取程序</td></tr>
-        <tr class="mod-linux"><td class="section">6.4 写入运行日志和数据日志（落盘；ch04 为串口实时输出）</td></tr>
-        <tr class="mod-linux"><td class="section">6.5 处理错误并输出可诊断信息</td></tr>
-        <tr class="mod-linux"><td class="section">6.6 整理可维护的应用程序目录结构</td></tr>
+        <tr class="mod-linux"><td class="section">6.2 互斥锁保护共享状态</td></tr>
+        <tr class="mod-linux"><td class="section">6.3 采集 / 通信 / 控制任务拆分</td></tr>
+        <tr class="mod-linux"><td class="section">6.4 环形缓冲区传递传感样本</td></tr>
+        <tr class="mod-linux"><td class="section">6.5 优雅退出与信号处理（<code>SIGINT</code>）</td></tr>
 
-        <!-- ch07 -->
-        <tr class="mod-linux">
-          <td rowspan="6" class="merge">ch07</td>
-          <td rowspan="6" class="merge">Linux 应用开发篇</td>
-          <td class="section">7.1 创建 pthread 采样线程</td>
-          <td rowspan="6" class="merge section">让程序具备稳定运行能力</td>
-          <td rowspan="6" class="merge section">双线程采样与显示；线程同步调试</td>
-          <td rowspan="6" class="merge section">形成可持续运行的多线程程序</td>
-          <td rowspan="6" class="merge glossary section"><dl>
-            <dt>pthread</dt><dd>POSIX 线程库，在 Linux 上创建和管理多个并发执行的线程。</dd>
-            <dt>生产者–消费者</dt><dd>一个线程往队列放入数据，另一个线程取出数据并处理。</dd>
-            <dt>互斥锁</dt><dd>保证同一时刻只有一个线程读写共享数据，避免数据错乱。</dd>
-          </dl></td>
-        </tr>
-        <tr class="mod-linux"><td class="section">7.2 使用互斥与同步保护共享数据</td></tr>
-        <tr class="mod-linux"><td class="section">7.3 拆分采集、显示和记录任务</td></tr>
-        <tr class="mod-linux"><td class="section">7.4 使用生产者–消费者模型传递 MNIST 样本<span class="tag">ML</span></td></tr>
-        <tr class="mod-linux"><td class="section">7.5 选读：Mailbox 与线程队列的适用边界</td></tr>
-        <tr class="mod-linux"><td class="section">7.6 选读：双线程架构与后续推理部署<span class="tag">ML</span></td></tr>
-
-        <!-- ch08 -->
-        <tr class="mod-ml">
-          <td rowspan="7" class="merge">ch08</td>
-          <td rowspan="7" class="merge">模型训练与部署篇</td>
-          <td class="section">8.1 MNIST 数据集与 0–9 分类任务定义</td>
-          <td rowspan="7" class="merge section">板载 CPU 训练 tiny CNN；准确率 80%–90%；导出 fp32 权重</td>
-          <td rowspan="7" class="merge section">LeNet 小网；NumPy 训练；导出 <code>weights.bin</code> + golden</td>
-          <td rowspan="7" class="merge section">板载训练完成，fp32 权重可复现 golden</td>
-          <td rowspan="7" class="merge glossary section"><dl>
-            <dt>CNN</dt><dd>用卷积层从图像中提取特征并做分类的神经网络。</dd>
-            <dt>LeNet / Conv / Pool / FC</dt><dd>一种小型 CNN 结构；卷积层提取局部特征；池化层缩小尺寸；全连接层输出各类得分。</dd>
-            <dt>SGD</dt><dd>随机梯度下降，每次用一小批样本计算梯度并更新权重。</dd>
-            <dt>fp32</dt><dd>32 位浮点数，训练阶段权重常用的数值格式。</dd>
-            <dt>weights.bin</dt><dd>导出的二进制权重文件。</dd>
-            <dt>golden</dt><dd>用固定输入跑模型得到的参考输出，用来核对后续推理是否正确。</dd>
-            <dt>checkpoint</dt><dd>训练中途保存的权重快照，可从中恢复或挑选最佳轮次。</dd>
-          </dl></td>
-        </tr>
-        <tr class="mod-ml"><td class="section">8.2 LeNet 风格 tiny CNN 结构（Conv–Pool–FC）</td></tr>
-        <tr class="mod-ml"><td class="section">8.3 板载 NumPy 前向 / 反向 / SGD 训练循环</td></tr>
-        <tr class="mod-ml"><td class="section">8.4 小 batch、少 epoch 控制训练时长（数小时内）</td></tr>
-        <tr class="mod-ml"><td class="section">8.5 串口 / 日志输出 epoch loss 与 test acc</td></tr>
-        <tr class="mod-ml"><td class="section">8.6 保存 checkpoint；挑选最佳 epoch</td></tr>
-        <tr class="mod-ml"><td class="section">8.7 导出 fp32 <code>weights.bin</code> 与固定输入 golden 输出</td></tr>
-
-        <!-- ch09 -->
-        <tr class="mod-ml">
-          <td rowspan="8" class="merge">ch09</td>
-          <td rowspan="8" class="merge">模型训练与部署篇</td>
-          <td class="section">9.1 浮点 vs int8：为何要做量化</td>
-          <td rowspan="8" class="merge section">int8 量化、剪枝；产出 int8 部署包</td>
-          <td rowspan="8" class="merge section">量化导出 int8；剪枝；精度–体积–延迟对比表</td>
-          <td rowspan="8" class="merge section">int8 <code>weights.h</code> + 精度–体积–延迟表</td>
+        <!-- capstone -->
+        <tr class="mod-cap">
+          <td rowspan="8" class="merge">综合</td>
+          <td rowspan="8" class="merge">综合大项目</td>
+          <td class="section">P.1 需求与架构：智能环境终端模块图</td>
+          <td rowspan="8" class="merge section">整合前置实验 + 边缘时序异常检测</td>
+          <td rowspan="8" class="merge section">组装；PC 训练；板 C 推理；MQTT 联动；答辩演示</td>
+          <td rowspan="8" class="merge section">完整可演示作品</td>
           <td rowspan="8" class="merge glossary section"><dl>
-            <dt>int8 / 量化</dt><dd>把 fp32 权重转为 8 位整数存储与运算，模型更小、推理更快；含训练后量化与（选读）量化感知再训练。</dd>
-            <dt>scale / zero-point</dt><dd>浮点数与 int8 互转时的比例系数；zero-point 是浮点 0 对应的整数值。</dd>
-            <dt>剪枝</dt><dd>删除部分权重或通道，使模型体积变小、计算量减少。</dd>
+            <dt>时序异常检测</dt><dd>对一段时间内的温度等采样提特征（如 min/max/均值），小模型判「正常/异常」。</dd>
+            <dt>滑动窗口</dt><dd>每次取最近 N 次采样组成一个特征向量再推理。</dd>
+            <dt>PC 训练 / 板推理</dt><dd>PC 用脚本训 tiny MLP 并导出 <code>weights.h</code>；板子 C 程序加载权重做前向计算。</dd>
+            <dt>规则模式 / 模型模式</dt><dd>配置切换：仅阈值控风，或模型判异常后联动风扇+LED+MQTT。</dd>
+            <dt>weights.h</dt><dd>导出的权重与 scale 常量，编译进 C 推理程序。</dd>
           </dl></td>
         </tr>
-        <tr class="mod-ml"><td class="section">9.2 量化：scale / zero-point 计算</td></tr>
-        <tr class="mod-ml"><td class="section">9.3 量化：整层 scale 与按通道 scale 对比</td></tr>
-        <tr class="mod-ml"><td class="section">9.4 结构化剪枝 + 再量化</td></tr>
-        <tr class="mod-ml"><td class="section">9.5 选读：精度优化（再训练量化或蒸馏，二选一）</td></tr>
-        <tr class="mod-ml"><td class="section">9.6 板载验证 int8 与 fp32 输出误差</td></tr>
-        <tr class="mod-ml"><td class="section">9.7 导出 <code>weights.h</code>（int8 数组 + scale 表）</td></tr>
-        <tr class="mod-ml"><td class="section">9.8 填写精度 / 模型体积 / 预估延迟对比表</td></tr>
-
-        <!-- ch10 -->
-        <tr class="mod-ml">
-          <td rowspan="8" class="merge">ch10</td>
-          <td rowspan="8" class="merge">模型训练与部署篇</td>
-          <td class="section">10.1 静态内存规划：权重 / 激活 / workspace</td>
-          <td rowspan="8" class="merge section">自写 int8 推理；测 latency / RAM；GPIO + UART 闭环</td>
-          <td rowspan="8" class="merge section">int8 算子；profile；<code>infer</code> shell；LED 展示</td>
-          <td rowspan="8" class="merge section">板载 MNIST int8 推理闭环可演示</td>
-          <td rowspan="8" class="merge glossary section"><dl>
-            <dt>静态内存</dt><dd>程序启动前或启动时一次性分配、大小固定的内存，推理时不再动态申请。</dd>
-            <dt>激活 / workspace</dt><dd>每层网络计算的中间结果；算子计算时需要的额外临时缓冲区。</dd>
-            <dt>算子</dt><dd>完成一次卷积或矩阵乘等基本运算的代码实现。</dd>
-            <dt>latency / peak RAM</dt><dd>单张图像推理耗时；推理过程中占用的最大内存。</dd>
-            <dt>softmax</dt><dd>把各类别得分转换成概率（各项非负且总和为 1）。</dd>
-            <dt>profile</dt><dd>测量各阶段耗时和内存占用。</dd>
-          </dl></td>
-        </tr>
-        <tr class="mod-ml"><td class="section">10.2 自写 int8 Conv / FC 算子（无外部推理框架）</td></tr>
-        <tr class="mod-ml"><td class="section">10.3 加载 <code>weights.h</code>；与 golden 逐层对齐</td></tr>
-        <tr class="mod-ml"><td class="section">10.4 单张推理 latency 与 peak RAM 测量</td></tr>
-        <tr class="mod-ml"><td class="section">10.5 优化：-<code>O3</code> / loop unroll / 算子融合概念</td></tr>
-        <tr class="mod-ml"><td class="section">10.6 UART <code>infer &lt;idx&gt;</code>：输出 digit + softmax 置信度</td></tr>
-        <tr class="mod-ml"><td class="section">10.7 GPIO 映射识别结果（LED 模式 / 数码管）</td></tr>
-        <tr class="mod-ml"><td class="section">10.8 整链验收：ch01–ch10 模块联调与答辩演示</td></tr>
+        <tr class="mod-cap"><td class="section">P.2 合并实验 1（风扇）+ 实验 2（MQTT 灯）+ ch04 配置日志</td></tr>
+        <tr class="mod-cap"><td class="section">P.3 ch06 线程架构：采集 / MQTT / 控制 / 推理</td></tr>
+        <tr class="mod-cap"><td class="section">P.4 PC 端：采集正常环境数据 → 训练 tiny 模型 → 导出 <code>weights.h</code></td></tr>
+        <tr class="mod-cap"><td class="section">P.5 板端：滑动窗口特征 + C 语言前向推理</td></tr>
+        <tr class="mod-cap"><td class="section">P.6 异常联动：红灯 + 加强风扇 + MQTT 告警主题</td></tr>
+        <tr class="mod-cap"><td class="section">P.7 演示脚本：正常态 vs 加热/捂板触发异常</td></tr>
+        <tr class="mod-cap"><td class="section">P.8 验收：模块说明、日志、配置、latency 与稳定性</td></tr>
       </tbody>
     </table>
   </div>
 
   <h2>章节衔接</h2>
   <ul class="relations">
-    <li>ch01 NumPy 检查 → ch08 板载训练复用同一 Python 环境</li>
-    <li>ch02 <code>.rodata</code> 段观察 → ch09 量化前后模型体积对比</li>
-    <li>ch03 GPIO 控制 → ch10 识别结果驱动 LED</li>
-    <li>ch04 串口命令框架 → ch10 <code>infer</code> 命令</li>
-    <li>ch05 灰度 buffer + OLED → ch08 训练输入；ch06 起从文件加载完整数据集</li>
-    <li>ch04 串口实时日志 / ch06 落盘日志 → ch08 训练过程记录</li>
-    <li>ch07 生产者–消费者队列 → ch10 推理线程与输入队列</li>
-    <li>ch08 fp32 <code>weights.bin</code> + golden → ch09 量化 → ch10 int8 部署</li>
+    <li>ch01–ch02 环境 + 工具链 → 实验 1、实验 2、综合项目<strong>全部</strong> C 程序编译部署基础</li>
+    <li>ch03 DHT22 + PWM → 实验 1 温控风扇 → 综合项目环境采集与风扇联动</li>
+    <li>ch03 UART 日志 → ch04 文件日志 → 综合项目运行记录</li>
+    <li>ch04 配置文件 → 实验 1 阈值、ch05 Broker 地址、综合项目规则/模型模式切换</li>
+    <li>ch05 MQTT → 实验 2 控灯 → 综合项目状态发布与异常告警</li>
+    <li>ch06 线程与队列 → 综合项目采集与推理并行</li>
+    <li>实验 1 + 实验 2 源码模块 → 综合项目<strong>组装而非重写</strong></li>
+    <li>PC 训练脚本产出 <code>weights.h</code> → 综合项目板端 C 推理（不讲完整深度学习，讲部署闭环）</li>
   </ul>
 
   <h2>硬课规</h2>
   <ul class="relations">
-    <li>视觉任务固定为 <strong>MNIST 0–9</strong> 数字识别（LeCun 公开数据集）</li>
-    <li>训练强制在 <strong>板载 CPU</strong> 完成（可用小 batch / 少 epoch，目标准确率 80%–90%）</li>
-    <li>推理强制在 <strong>板载 CPU</strong> 完成（自写 int8 算子或等价轻量实现）</li>
+    <li>板载应用必须以 <strong>C 语言</strong> 实现（MQTT 可用 libmosquitto 等 C 库）</li>
+    <li>必须使用 <strong>RuyiSDK</strong> 获取工具链与目标环境</li>
+    <li>必须包含 <strong>交叉编译 + Makefile（或等价工程模板）</strong> 全流程</li>
+    <li>必须有 <strong>综合大项目</strong> 可演示成果，不能只做分散实验</li>
+    <li>模型：<strong>PC 端轻量训练</strong>（跟课程脚本）→ <strong>板端 C 推理</strong>；不要求板上训练</li>
+    <li>OpenCV、YOLO、语音 KWS、Buildroot 等 <strong>不进主线</strong>，见 <code>docs/archive/</code> 选修草稿</li>
+  </ul>
+
+  <h2>训练与推理分工</h2>
+  <ul class="relations">
+    <li><strong>PC（轻量）</strong>：采集/导入正常温湿度序列 → 提取窗口特征 → 训练 tiny MLP（或浅层模型）→ 导出 <code>weights.h</code> + golden 向量</li>
+    <li><strong>开发板（主线）</strong>：滑动窗口 → C 前向推理 → 正常/异常 → 风扇 + LED + MQTT</li>
+    <li>课堂重点：<code>weights.h</code> 如何进工程、推理如何嵌进多线程、如何与规则控制共存</li>
   </ul>
 
   <footer>
-    用浏览器直接打开本文件即可。
+    浏览器打开本文件，或运行仓库根目录 <code>./start.sh</code> 预览（<code>/</code> 指向本大纲）。
+    历史草案（MNIST、KWS、OpenCV、144 知识点拼盘）见 <code>docs/archive/</code>。
   </footer>
 </main>
 </body>
