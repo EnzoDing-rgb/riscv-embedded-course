@@ -201,7 +201,7 @@
   <h1>Course Outline</h1>
   <p class="note">
     <strong>Linux 嵌入式实践课</strong> · RISC-V 开发板 + RuyiSDK + <strong>C 语言</strong> ·
-    两个小项目 + 一个综合大项目 · 大项目含边缘推理（PC 训练 → 板载 C 推理）
+    两个小项目 + 一个综合大项目 · 大项目里模型在电脑上训练，在开发板上用 C 程序运行
   </p>
 
   <div class="flow-wrap">
@@ -268,7 +268,7 @@
       <thead>
         <tr>
           <th style="width:16%">术语</th>
-          <th style="width:84%">是什么（人话）</th>
+          <th style="width:84%">说明</th>
         </tr>
       </thead>
       <tbody>
@@ -321,8 +321,8 @@
           <td>不看单次温度，看<strong>最近一串读数</strong>（滑动窗口）像不像「正常环境」。不像 → 判异常。综合项目的 AI 部分就是这个。</td>
         </tr>
         <tr>
-          <td>PC 训练 / 板推理</td>
-          <td>在电脑上用小脚本训一个很小的模型，导出 <code>weights.h</code>；开发板 C 程序只负责<strong>算结果、控风扇灯</strong>，不在板上训模型。</td>
+          <td>电脑上训练 / 开发板运行模型</td>
+          <td>在电脑上用小脚本训练很小的模型，导出 <code>weights.h</code>；开发板上的 C 程序负责读取权重、算出结果，并控制风扇和灯。不在开发板上训练。</td>
         </tr>
         <tr>
           <td><code>weights.h</code></td>
@@ -367,7 +367,7 @@
           <td>综合项目</td>
           <td>智能环境终端（含时序异常检测）</td>
           <td>整合温控 + 远程控灯 + 日志配置 + 多线程；模型判「环境异常」→ 风扇/LED/MQTT 联动</td>
-          <td>ch01–ch06 全部模块；PC 轻量训练小模型；板载 C 推理；可选规则/模型双模式</td>
+          <td>ch01–ch06 全部模块；电脑上训练小模型；开发板 C 程序运行模型；可选纯规则或规则+模型</td>
           <td>把实验 1、2 合成一个监控盒；板载小模型根据最近温度走势判「环境异常」时，板上 LED 亮红灯、风扇加档，手机 MQTT App 收到一条告警消息——三项同时发生。</td>
         </tr>
       </tbody>
@@ -518,7 +518,7 @@
           <td>综合</td>
           <td>综合大项目</td>
           <td>智能环境终端</td>
-          <td>整合实验 1/2 + ch04–ch06；加入时序异常检测（PC 训、板推理）</td>
+          <td>整合实验 1/2 + ch04–ch06；加入时序异常检测（电脑上训练，开发板上运行）</td>
           <td>模块组装；<code>weights.h</code> 部署；异常演示（加热/捂板）；MQTT 上报</td>
           <td>可答辩的完整 Linux 嵌入式 + 边缘推理作品</td>
         </tr>
@@ -711,13 +711,13 @@
           <td rowspan="8" class="merge">综合大项目</td>
           <td class="section">P.1 需求与架构：智能环境终端模块图</td>
           <td rowspan="8" class="merge section">整合前置实验 + 边缘时序异常检测</td>
-          <td rowspan="8" class="merge section">组装；PC 训练；板 C 推理；MQTT 联动；答辩演示</td>
+          <td rowspan="8" class="merge section">模块组装；电脑上训练；开发板运行模型；MQTT 联动；答辩演示</td>
           <td rowspan="8" class="merge section">完整可演示作品</td>
           <td rowspan="8" class="merge glossary section"><dl>
             <dt>时序异常检测</dt><dd>对一段时间内的温度等采样提特征（如 min/max/均值），小模型判「正常/异常」。</dd>
             <dt>滑动窗口</dt><dd>每次取最近 N 次采样组成一个特征向量再推理。</dd>
-            <dt>PC 训练 / 板推理</dt><dd>PC 用脚本训 tiny MLP 并导出 <code>weights.h</code>；板子 C 程序加载权重做前向计算。</dd>
-            <dt>规则模式 / 模型模式</dt><dd>配置切换：仅阈值控风，或模型判异常后联动风扇+LED+MQTT。</dd>
+            <dt>电脑上训练 / 开发板运行</dt><dd>在 PC 上用脚本训练 tiny MLP，导出 <code>weights.h</code>；开发板 C 程序加载权重并完成前向计算。</dd>
+            <dt>规则模式 / 模型模式</dt><dd>配置切换：只用阈值控风，或模型判异常后同时联动风扇、LED 和 MQTT。</dd>
             <dt>weights.h</dt><dd>导出的权重与 scale 常量，编译进 C 推理程序。</dd>
           </dl></td>
         </tr>
@@ -741,7 +741,7 @@
     <li>ch05 MQTT → 实验 2 控灯 → 综合项目状态发布与异常告警</li>
     <li>ch06 线程与队列 → 综合项目采集与推理并行</li>
     <li>实验 1 + 实验 2 源码模块 → 综合项目<strong>组装而非重写</strong></li>
-    <li>PC 训练脚本产出 <code>weights.h</code> → 综合项目板端 C 推理（不讲完整深度学习，讲部署闭环）</li>
+    <li>电脑上的训练脚本产出 <code>weights.h</code> → 综合项目在开发板上用 C 程序运行模型（不讲完整深度学习，讲部署闭环）</li>
   </ul>
 
   <h2>硬课规</h2>
@@ -762,8 +762,8 @@
   </ul>
 
   <footer>
-    浏览器打开本文件，或运行仓库根目录 <code>./start.sh</code> 预览（<code>/</code> 指向本大纲）。
-    历史草案（MNIST、KWS、OpenCV、144 知识点拼盘）见 <code>docs/archive/</code>。
+    在线预览：<a href="https://enzoding-rgb.github.io/riscv-embedded-course/">enzoding-rgb.github.io/riscv-embedded-course</a>
+    · 本地运行 <code>./start.sh</code> · 历史草案见 <code>docs/archive/</code>
   </footer>
 </main>
 </body>
