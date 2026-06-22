@@ -341,10 +341,11 @@
     <table class="projects">
       <thead>
         <tr>
-          <th style="width:10%">阶段</th>
-          <th style="width:22%">项目</th>
-          <th style="width:38%">闭环</th>
-          <th style="width:30%">串起的知识点</th>
+          <th style="width:8%">阶段</th>
+          <th style="width:16%">项目</th>
+          <th style="width:26%">闭环</th>
+          <th style="width:24%">串起的知识点</th>
+          <th style="width:26%">一句话说明</th>
         </tr>
       </thead>
       <tbody>
@@ -353,18 +354,21 @@
           <td>温度传感器 + 风扇</td>
           <td>本地自动化：读温度 → 判断阈值 → 控制风扇转速/开关</td>
           <td>RuyiSDK 环境、C 编译部署、GPIO/外设读取、条件控制</td>
+          <td>按配置文件里的温度上下限控风扇（写好的规则，不用模型）：超过上限开风扇，低于下限关风扇。</td>
         </tr>
         <tr>
           <td>实验 2</td>
           <td>LED + Mosquitto + 手机 MQTT App</td>
           <td>远程控制：手机发消息 → Broker → 开发板 → LED 亮灭</td>
           <td>TCP/IP、MQTT 订阅发布、GPIO 输出、与实验 1 独立可演示</td>
+          <td>手机发指令，远程开关板子上的 LED。</td>
         </tr>
         <tr>
           <td>综合项目</td>
           <td>智能环境终端（含时序异常检测）</td>
           <td>整合温控 + 远程控灯 + 日志配置 + 多线程；模型判「环境异常」→ 风扇/LED/MQTT 联动</td>
           <td>ch01–ch06 全部模块；PC 轻量训练小模型；板载 C 推理；可选规则/模型双模式</td>
+          <td>把实验 1、2 合成一个监控盒；板载小模型根据最近温度走势判「环境异常」时，板上 LED 亮红灯、风扇加档，手机 MQTT App 收到一条告警消息——三项同时发生。</td>
         </tr>
       </tbody>
     </table>
