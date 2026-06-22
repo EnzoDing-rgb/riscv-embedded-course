@@ -4,9 +4,9 @@
 
 ## 课程大纲（浏览器预览）
 
-https://enzoding-rgb.github.io/riscv-embedded-course/
+https://enzoding-rgb.github.io/riscv-embedded-course/CourseOutline.html
 
-打开即是排版好的 HTML 页面（由 GitHub Pages 从本仓库 `docs/` 目录发布，无需本地启动）。
+打开即是排版好的 HTML 页面（GitHub Pages 从 `docs/` 发布）。
 
 本地开发预览：`./start.sh` → http://127.0.0.1:8765/
 

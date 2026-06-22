@@ -29,8 +29,7 @@ free_port() {
   fi
 }
 
-# / → 大纲（python http.server 默认读 index.html）
-ln -sf CourseOutline.html "$DOCS/index.html"
+# 本地预览：直接打开 http://127.0.0.1:${PORT}/CourseOutline.html
 
 free_port "$PORT"
 
@@ -41,7 +40,7 @@ echo "=========================================="
 echo ""
 echo "1. Keep this terminal running (Ctrl+C to stop)."
 echo "2. Cursor Remote-SSH: Ports → ${PORT} → Open in Browser"
-echo "3. Local: http://localhost:${PORT}/"
+echo "3. Local: http://localhost:${PORT}/CourseOutline.html"
 echo ""
 
 exec python3 -m http.server "$PORT" --bind 127.0.0.1 --directory "$DOCS"
